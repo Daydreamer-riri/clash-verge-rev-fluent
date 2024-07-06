@@ -178,7 +178,7 @@ const Layout = () => {
           </div>
 
           <div className="layout__right">
-            {
+            {OS !== "windows" && (
               <div className="the-bar">
                 <div
                   className="the-dragbar"
@@ -187,7 +187,7 @@ const Layout = () => {
                 ></div>
                 {OS !== "macos" && <LayoutControl />}
               </div>
-            }
+            )}
 
             <TransitionGroup className="the-content">
               <CSSTransition
