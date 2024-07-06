@@ -11,7 +11,8 @@ mod feat;
 mod utils;
 
 use crate::utils::{init, resolve, server};
-use tauri::{api, SystemTray};
+use tauri::{api, Manager, SystemTray};
+use window_vibrancy::{apply_mica, apply_vibrancy, NSVisualEffectMaterial};
 
 fn main() -> std::io::Result<()> {
     // 单例检测
@@ -36,9 +37,14 @@ fn main() -> std::io::Result<()> {
     let mut builder = tauri::Builder::default()
         .system_tray(SystemTray::new())
         .setup(|app| {
+            let window = app.get_window("main").unwrap();
+            #[cfg(target_os = "windows")]
+            apply_mica(&window, Some(false))
+                .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
             tauri::async_runtime::block_on(async move {
                 resolve::resolve_setup(app).await;
             });
+
             Ok(())
         })
         .on_system_tray_event(core::tray::Tray::on_system_tray_event)
