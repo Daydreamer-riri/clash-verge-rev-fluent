@@ -74,7 +74,7 @@
         "scope": ["$APPDATA/**", "$RESOURCE/../**", "**"]
       }
     },
-    "windows": [],
+    "windows": [{ "transparent": true }],
     "security": {
       "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: asset: 'unsafe-eval' 'unsafe-inline' 'self';"
     }
