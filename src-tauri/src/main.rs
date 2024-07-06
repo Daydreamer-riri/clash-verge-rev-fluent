@@ -37,10 +37,16 @@ fn main() -> std::io::Result<()> {
     let mut builder = tauri::Builder::default()
         .system_tray(SystemTray::new())
         .setup(|app| {
-            let window = app.get_window("main").unwrap();
-            #[cfg(target_os = "windows")]
-            apply_mica(&window, Some(false))
-                .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+            match app.get_window("main") {
+                Some(window) => {
+                    #[cfg(target_os = "windows")]
+                    apply_mica(&window, Some(false))
+                        .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+                }
+                None => {
+                    println!("main window not found");
+                }
+            }
             tauri::async_runtime::block_on(async move {
                 resolve::resolve_setup(app).await;
             });
@@ -124,6 +130,10 @@ fn main() -> std::io::Result<()> {
         .build(tauri::generate_context!())
         .expect("error while running tauri application");
 
+    let window = app.get_window("main").unwrap();
+    #[cfg(target_os = "windows")]
+    apply_mica(&window, Some(false))
+        .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
     app.run(|app_handle, e| match e {
         tauri::RunEvent::ExitRequested { api, .. } => {
             api.prevent_exit();
