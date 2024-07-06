@@ -123,7 +123,7 @@ const Layout = () => {
           }}
           sx={[
             ({ palette }) => ({
-              bgcolor: palette.background.paper,
+              bgcolor: "transparent",
             }),
             OS === "linux"
               ? {
