@@ -138,10 +138,10 @@ fn main() -> std::io::Result<()> {
         tauri::RunEvent::ExitRequested { api, .. } => {
             api.prevent_exit();
         }
-        tauri::RunEvent::Updater(tauri::UpdaterEvent::Downloaded) => {
-            resolve::resolve_reset();
-            api::process::kill_children();
-        }
+        // tauri::RunEvent::Updater(tauri::UpdaterEvent::Downloaded) => {
+        //     resolve::resolve_reset();
+        //     api::process::kill_children();
+        // }
         tauri::RunEvent::WindowEvent { label, event, .. } => {
             if label == "main" {
                 match event {
