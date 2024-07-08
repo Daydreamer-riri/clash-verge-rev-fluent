@@ -73,5 +73,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: Clash Verge Rev"
+          name: "Clash Verge Rev"
           path: "src-tauri/target/${{ matrix.target }}/release/bundle/nsis/*setup*"
