@@ -23,6 +23,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@fluentui/react-components": "^9.54.4",
     "@juggle/resize-observer": "^3.4.0",
     "@mui/icons-material": "^5.16.0",
     "@mui/lab": "5.0.0-alpha.149",
