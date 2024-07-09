@@ -7,11 +7,35 @@ import {
 } from "@mui/material";
 import { useMatch, useResolvedPath, useNavigate } from "react-router-dom";
 import { useVerge } from "@/hooks/use-verge";
+import { makeStyles, mergeClasses, Tab } from "@fluentui/react-components";
 interface Props {
   to: string;
   children: string;
   icon: React.ReactNode[];
 }
+const useStyle = makeStyles({
+  item: {
+    marginBottom: "4px",
+    borderRadius: "4px",
+    outline: "none !important",
+    "&:hover": {
+      backgroundColor: "rgba(0, 0, 0, 0.04)",
+      "&::before": {
+        backgroundColor: "rgba(0, 0, 0, 0)",
+      },
+    },
+    "&:active": {
+      backgroundColor: "rgba(0, 0, 0, 0.03)",
+      "&::before": {
+        backgroundColor: "rgba(0, 0, 0, 0)",
+      },
+    },
+  },
+  selected: {
+    backgroundColor: "rgba(0, 0, 0, 0.04)",
+  },
+});
+
 export const LayoutItem = (props: Props) => {
   const { to, children, icon } = props;
   const { verge } = useVerge();
@@ -69,3 +93,22 @@ export const LayoutItem = (props: Props) => {
     </ListItem>
   );
 };
+
+export function FluentLayoutItem(props: Props) {
+  const { to, children, icon } = props;
+  const { verge } = useVerge();
+  const resolved = useResolvedPath(to);
+  const match = useMatch({ path: resolved.pathname, end: true });
+
+  const classes = useStyle();
+
+  return (
+    <Tab
+      value={to}
+      className={mergeClasses(classes.item, !!match && classes.selected)}
+      icon={icon[0] as any}
+    >
+      {children.replace(/\s/g, "")}
+    </Tab>
+  );
+}

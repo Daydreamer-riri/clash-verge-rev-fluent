@@ -48,13 +48,13 @@ const contexts = [
 ];
 
 createRoot(container).render(
-  <React.StrictMode>
-    <ComposeContextProvider contexts={contexts}>
-      <BaseErrorBoundary>
-        <BrowserRouter>
-          <Layout />
-        </BrowserRouter>
-      </BaseErrorBoundary>
-    </ComposeContextProvider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <ComposeContextProvider contexts={contexts}>
+    <BaseErrorBoundary>
+      <BrowserRouter>
+        <Layout />
+      </BrowserRouter>
+    </BaseErrorBoundary>
+  </ComposeContextProvider>
+  // </React.StrictMode>
 );
