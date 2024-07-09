@@ -106,7 +106,7 @@ export function FluentLayoutItem(props: Props) {
     <Tab
       value={to}
       className={mergeClasses(classes.item, !!match && classes.selected)}
-      icon={icon[0] as any}
+      icon={icon[2] ?? (icon[0] as any)}
     >
       {children.replace(/\s/g, "")}
     </Tab>

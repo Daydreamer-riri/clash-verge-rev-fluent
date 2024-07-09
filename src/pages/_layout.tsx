@@ -36,6 +36,7 @@ import { getPortableFlag } from "@/services/cmds";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { invoke } from "@tauri-apps/api/tauri";
 export let portableFlag = false;
 
 dayjs.extend(relativeTime);
@@ -248,6 +249,10 @@ export default Layout;
 
 function FluentProviderWithTheme({ children }: { children: React.ReactNode }) {
   const theme = useThemeMode();
+  useEffect(() => {
+    invoke("set_mica_theme", { isDark: theme === "dark" });
+  }, [theme]);
+
   return (
     <FluentProvider
       theme={theme === "light" ? webLightTheme : webDarkTheme}

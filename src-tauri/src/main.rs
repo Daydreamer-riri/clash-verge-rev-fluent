@@ -104,7 +104,8 @@ fn main() -> std::io::Result<()> {
             cmds::service::install_service,
             cmds::service::uninstall_service,
             // clash api
-            cmds::clash_api_get_proxy_delay
+            cmds::clash_api_get_proxy_delay,
+            set_mica_theme,
         ]);
 
     #[cfg(target_os = "macos")]
@@ -132,9 +133,18 @@ fn main() -> std::io::Result<()> {
         .expect("error while running tauri application");
 
     let window = app.get_window("main").unwrap();
+
     #[cfg(target_os = "windows")]
-    apply_mica(&window, Some(false))
-        .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+    {
+        let _ = window.set_decorations(true).unwrap();
+        window.minimize().unwrap();
+        window.unminimize().unwrap();
+
+        window.maximize().unwrap();
+        window.unmaximize().unwrap();
+        apply_mica(&window, Some(false))
+            .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+    }
     app.run(|app_handle, e| match e {
         tauri::RunEvent::ExitRequested { api, .. } => {
             api.prevent_exit();
@@ -163,4 +173,12 @@ fn main() -> std::io::Result<()> {
     });
 
     Ok(())
+}
+#[tauri::command]
+fn set_mica_theme(window: tauri::Window, is_dark: bool) {
+    #[cfg(target_os = "windows")]
+    {
+        apply_mica(&window, Some(is_dark))
+            .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+    }
 }

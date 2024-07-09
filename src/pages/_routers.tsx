@@ -23,11 +23,12 @@ import SubjectRoundedIcon from "@mui/icons-material/SubjectRounded";
 import WifiTetheringRoundedIcon from "@mui/icons-material/WifiTetheringRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 
+import { NetworkCheckFilled } from "@fluentui/react-icons";
 export const routers = [
   {
     label: "Label-Proxies",
     path: "/",
-    icon: [<WifiRoundedIcon />, <ProxiesSvg />],
+    icon: [<WifiRoundedIcon />, <ProxiesSvg />, <NetworkCheckFilled />],
     element: <ProxiesPage />,
   },
   {
