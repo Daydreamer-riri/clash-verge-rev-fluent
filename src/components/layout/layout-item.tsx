@@ -15,6 +15,7 @@ interface Props {
 }
 const useStyle = makeStyles({
   item: {
+    columnGap: "12px",
     marginBottom: "4px",
     borderRadius: "4px",
     outline: "none !important",
@@ -33,6 +34,9 @@ const useStyle = makeStyles({
   },
   selected: {
     backgroundColor: "rgba(0, 0, 0, 0.04)",
+  },
+  iconOverride: {
+    color: "inherit !important",
   },
 });
 
@@ -106,7 +110,11 @@ export function FluentLayoutItem(props: Props) {
     <Tab
       value={to}
       className={mergeClasses(classes.item, !!match && classes.selected)}
-      icon={icon[2] ?? (icon[0] as any)}
+      icon={{
+        children: icon[2] ?? (icon[0] as any),
+        className: classes.iconOverride,
+      }}
+      content={{ style: { fontWeight: "500" } }}
     >
       {children.replace(/\s/g, "")}
     </Tab>

@@ -137,11 +137,11 @@ fn main() -> std::io::Result<()> {
     #[cfg(target_os = "windows")]
     {
         let _ = window.set_decorations(true).unwrap();
-        window.minimize().unwrap();
-        window.unminimize().unwrap();
+        // window.minimize().unwrap();
+        // window.unminimize().unwrap();
 
-        window.maximize().unwrap();
-        window.unmaximize().unwrap();
+        // window.maximize().unwrap();
+        // window.unmaximize().unwrap();
         apply_mica(&window, Some(false))
             .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
     }

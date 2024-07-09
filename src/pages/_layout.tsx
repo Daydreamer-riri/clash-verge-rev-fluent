@@ -13,6 +13,7 @@ import {
   Button,
   webLightTheme,
   webDarkTheme,
+  Theme,
 } from "@fluentui/react-components";
 import { listen } from "@tauri-apps/api/event";
 import { appWindow } from "@tauri-apps/api/window";
@@ -230,6 +231,7 @@ const Layout = () => {
         vertical
         selectedValue={location.pathname}
         onTabSelect={(e, value) => navigate(value.value as string)}
+        // appearance="subtle"
       >
         {routers.map((router) => (
           <FluentLayoutItem
