@@ -159,7 +159,7 @@ pub fn create_window(app_handle: &AppHandle) {
     #[cfg(target_os = "windows")]
     let window = builder
         .decorations(false)
-        .additional_browser_args("--enable-features=msWebView2EnableDraggableRegions --disable-features=OverscrollHistoryNavigation,msExperimentalScrolling")
+        .additional_browser_args("--enable-features=msWebView2EnableDraggableRegions,OverlayScrollbar,msOverlayScrollbarWinStyle,msOverlayScrollbarWinStyleAnimation")
         .transparent(true)
         .visible(false)
         .build();

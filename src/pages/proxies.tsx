@@ -64,7 +64,7 @@ const ProxyPage = () => {
 
           <Menu>
             <MenuTrigger disableButtonEnhancement>
-              <MenuButton appearance="subtle">
+              <MenuButton appearance="secondary">
                 {t(curMode ?? "global")}
               </MenuButton>
             </MenuTrigger>

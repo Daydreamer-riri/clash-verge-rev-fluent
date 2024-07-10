@@ -1,7 +1,7 @@
 import useSWR, { mutate } from "swr";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLockFn } from "ahooks";
-import { Box, Button, Grid, IconButton, Stack, Divider } from "@mui/material";
+import { Box, Grid, IconButton, Stack, Divider } from "@mui/material";
 import {
   DndContext,
   closestCenter,
@@ -50,6 +50,8 @@ import { BaseStyledTextField } from "@/components/base/base-styled-text-field";
 import { listen } from "@tauri-apps/api/event";
 import { readTextFile } from "@tauri-apps/api/fs";
 import { readText } from "@tauri-apps/api/clipboard";
+import { Button, Input, Spinner } from "@fluentui/react-components";
+import { ClipboardPasteRegular, DismissRegular } from "@fluentui/react-icons";
 
 const ProfilePage = () => {
   const { t } = useTranslation();
@@ -300,48 +302,29 @@ const ProfilePage = () => {
           alignItems: "center",
         }}
       >
-        <BaseStyledTextField
+        <Input
           value={url}
-          variant="outlined"
           onChange={(e) => setUrl(e.target.value)}
           placeholder={t("Profile URL")}
-          InputProps={{
-            sx: { pr: 1 },
-            endAdornment: !url ? (
-              <IconButton
-                size="small"
-                sx={{ p: 0.5 }}
-                title={t("Paste")}
-                onClick={onCopyLink}
-              >
-                <ContentPasteRounded fontSize="inherit" />
-              </IconButton>
-            ) : (
-              <IconButton
-                size="small"
-                sx={{ p: 0.5 }}
-                title={t("Clear")}
-                onClick={() => setUrl("")}
-              >
-                <ClearRounded fontSize="inherit" />
-              </IconButton>
-            ),
-          }}
+          contentAfter={
+            <Button
+              onClick={!url ? onCopyLink : () => setUrl("")}
+              icon={!url ? <ClipboardPasteRegular /> : <DismissRegular />}
+              size="small"
+              appearance="transparent"
+            />
+          }
+          style={{ flex: 1 }}
         />
-        <LoadingButton
+        <Button
           disabled={!url || disabled}
-          loading={loading}
-          variant="contained"
-          size="small"
-          sx={{ borderRadius: "6px" }}
           onClick={onImport}
+          icon={loading ? <Spinner size="tiny" /> : null}
         >
           {t("Import")}
-        </LoadingButton>
+        </Button>
         <Button
-          variant="contained"
-          size="small"
-          sx={{ borderRadius: "6px" }}
+          appearance="primary"
           onClick={() => viewerRef.current?.create()}
         >
           {t("New")}

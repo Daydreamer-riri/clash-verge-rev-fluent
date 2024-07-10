@@ -46,11 +46,13 @@ const RulesPage = () => {
       </Box>
 
       <Box
-        height="calc(100% - 65px)"
+        height="calc(100% - 56px)"
         sx={{
-          margin: "10px",
+          margin: "10px 0 0 10px",
           borderRadius: "8px",
-          bgcolor: isDark ? "#282a36" : "#ffffff",
+          bgcolor: isDark
+            ? "rgba(255, 255, 255, 0.04)"
+            : "rgba(255, 255, 255, 0.7)",
         }}
       >
         {rules.length > 0 ? (

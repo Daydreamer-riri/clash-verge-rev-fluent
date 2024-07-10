@@ -156,4 +156,15 @@
   .layout__left {
     border-right: none;
   }
+
+  .layout__right {
+    .base-container {
+      background-color: transparent !important;
+      border-top-left-radius: 4px;
+
+      & > section {
+        background-color: transparent !important;
+      }
+    }
+  }
 }

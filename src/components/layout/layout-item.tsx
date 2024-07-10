@@ -8,35 +8,39 @@ import {
 import { useMatch, useResolvedPath, useNavigate } from "react-router-dom";
 import { useVerge } from "@/hooks/use-verge";
 import { makeStyles, mergeClasses, Tab } from "@fluentui/react-components";
+import { tokens } from "../../pages/_theme";
 interface Props {
   to: string;
   children: string;
   icon: React.ReactNode[];
 }
-const useStyle = makeStyles({
+export const useListItemStyle = makeStyles({
   item: {
     columnGap: "12px",
     marginBottom: "4px",
     borderRadius: "4px",
     outline: "none !important",
     "&:hover": {
-      backgroundColor: "rgba(0, 0, 0, 0.04)",
+      backgroundColor: tokens.overlay1,
       "&::before": {
         backgroundColor: "rgba(0, 0, 0, 0)",
       },
+      "& .fui-Tab__icon": {
+        color: tokens.colorNeutralForeground1Hover + " !important",
+      },
     },
     "&:active": {
-      backgroundColor: "rgba(0, 0, 0, 0.03)",
+      backgroundColor: tokens.overlay1Pressed,
       "&::before": {
         backgroundColor: "rgba(0, 0, 0, 0)",
       },
     },
   },
   selected: {
-    backgroundColor: "rgba(0, 0, 0, 0.04)",
+    backgroundColor: tokens.overlay1,
   },
   iconOverride: {
-    color: "inherit !important",
+    color: tokens.colorNeutralForeground1 + " !important",
   },
 });
 
@@ -104,7 +108,7 @@ export function FluentLayoutItem(props: Props) {
   const resolved = useResolvedPath(to);
   const match = useMatch({ path: resolved.pathname, end: true });
 
-  const classes = useStyle();
+  const classes = useListItemStyle();
 
   return (
     <Tab

@@ -38,6 +38,7 @@ import { useNavigate } from "react-router-dom";
 import React from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { invoke } from "@tauri-apps/api/tauri";
+import { darkTheme, lightTheme } from "./_theme";
 export let portableFlag = false;
 
 dayjs.extend(relativeTime);
@@ -258,7 +259,7 @@ function FluentProviderWithTheme({ children }: { children: React.ReactNode }) {
 
   return (
     <FluentProvider
-      theme={theme === "light" ? webLightTheme : webDarkTheme}
+      theme={theme === "light" ? lightTheme : darkTheme}
       style={{ background: "transparent" }}
     >
       {children}
