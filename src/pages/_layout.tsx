@@ -250,6 +250,7 @@ const Layout = () => {
 export default Layout;
 
 function FluentProviderWithTheme({ children }: { children: React.ReactNode }) {
+  webLightTheme.colorSubtleBackgroundHover = "rgba(0, 0, 0, 0.04)";
   const theme = useThemeMode();
   useEffect(() => {
     invoke("set_mica_theme", { isDark: theme === "dark" });
