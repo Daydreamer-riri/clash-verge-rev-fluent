@@ -1,11 +1,22 @@
 import { useMemo, useState } from "react";
-import { Box, Button, IconButton, MenuItem } from "@mui/material";
+import { Box, IconButton, MenuItem } from "@mui/material";
 import { Virtuoso } from "react-virtuoso";
 import { useTranslation } from "react-i18next";
 import {
   PlayCircleOutlineRounded,
   PauseCircleOutlineRounded,
 } from "@mui/icons-material";
+import {
+  Button,
+  MenuButton,
+  Menu,
+  MenuTrigger,
+  TabList,
+  Tab,
+  MenuPopover,
+  MenuList,
+  MenuItemRadio,
+} from "@fluentui/react-components";
 import { useLogData } from "@/hooks/use-log-data";
 import { useEnableLog } from "@/services/states";
 import { BaseEmpty, BasePage } from "@/components/base";
@@ -14,6 +25,8 @@ import { useCustomTheme } from "@/components/layout/use-custom-theme";
 import { BaseSearchBox } from "@/components/base/base-search-box";
 import { BaseStyledSelect } from "@/components/base/base-styled-select";
 import { mutate } from "swr";
+import { tokens } from "./_theme";
+import { PauseCircleRegular, PlayCircleRegular } from "@fluentui/react-icons";
 
 const LogPage = () => {
   const { t } = useTranslation();
@@ -39,22 +52,13 @@ const LogPage = () => {
       contentStyle={{ height: "100%" }}
       header={
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <IconButton
-            title={t("Pause")}
-            size="small"
-            color="inherit"
-            onClick={() => setEnableLog((e) => !e)}
-          >
-            {enableLog ? (
-              <PauseCircleOutlineRounded />
-            ) : (
-              <PlayCircleOutlineRounded />
-            )}
-          </IconButton>
-
           <Button
+            onClick={() => setEnableLog((e) => !e)}
+            icon={enableLog ? <PauseCircleRegular /> : <PlayCircleRegular />}
+            appearance="subtle"
             size="small"
-            variant="contained"
+          />
+          <Button
             // useSWRSubscription adds a prefix "$sub$" to the cache key
             // https://github.com/vercel/swr/blob/1585a3e37d90ad0df8097b099db38f1afb43c95d/src/subscription/index.ts#L37
             onClick={() => mutate("$sub$getClashLog", [])}
@@ -72,17 +76,35 @@ const LogPage = () => {
           height: "36px",
           display: "flex",
           alignItems: "center",
+          gap: 1,
         }}
       >
-        <BaseStyledSelect
-          value={logState}
-          onChange={(e) => setLogState(e.target.value)}
-        >
-          <MenuItem value="all">ALL</MenuItem>
-          <MenuItem value="inf">INFO</MenuItem>
-          <MenuItem value="warn">WARN</MenuItem>
-          <MenuItem value="err">ERROR</MenuItem>
-        </BaseStyledSelect>
+        <Menu>
+          <MenuTrigger>
+            <MenuButton>{logState}</MenuButton>
+          </MenuTrigger>
+          <MenuPopover>
+            <MenuList
+              onCheckedValueChange={(_, { checkedItems }) =>
+                setLogState(checkedItems[0])
+              }
+              checkedValues={{ logState: [logState] }}
+            >
+              <MenuItemRadio name="logState" value="all">
+                ALL
+              </MenuItemRadio>
+              <MenuItemRadio name="logState" value="inf">
+                INFO
+              </MenuItemRadio>
+              <MenuItemRadio name="logState" value="warn">
+                WARN
+              </MenuItemRadio>
+              <MenuItemRadio name="logState" value="err">
+                ERROR
+              </MenuItemRadio>
+            </MenuList>
+          </MenuPopover>
+        </Menu>
         <BaseSearchBox onSearch={(match) => setMatch(() => match)} />
       </Box>
 
@@ -91,7 +113,7 @@ const LogPage = () => {
         sx={{
           margin: "10px",
           borderRadius: "8px",
-          bgcolor: isDark ? "#282a36" : "#ffffff",
+          bgcolor: tokens.surface1,
         }}
       >
         {filterLogs.length > 0 ? (

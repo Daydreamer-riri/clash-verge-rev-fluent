@@ -40,12 +40,14 @@ export const lightTheme = {
   ...webLightTheme,
   overlay1: "rgba(0, 0, 0, 0.04)",
   overlay1Pressed: "rgba(0, 0, 0, 0.02)",
+  surface1: "rgba(255, 255, 255, 0.65)",
 };
 
 export const darkTheme = {
   ...webDarkTheme,
   overlay1: "rgba(255, 255, 255, 0.04)",
   overlay1Pressed: "rgba(255, 255, 255, 0.02)",
+  surface1: "rgba(255, 255, 255, 0.04)",
 };
 
 export const tokens = themeToTokensObject(lightTheme);

@@ -1,9 +1,9 @@
 import { useMemo, useRef, useState } from "react";
 import { useLockFn } from "ahooks";
-import { Box, Button, IconButton, MenuItem } from "@mui/material";
+import { Box, IconButton, MenuItem } from "@mui/material";
+import { Button } from "@fluentui/react-components";
 import { Virtuoso } from "react-virtuoso";
 import { useTranslation } from "react-i18next";
-import { TableChartRounded, TableRowsRounded } from "@mui/icons-material";
 import { closeAllConnections } from "@/services/api";
 import { useConnectionSetting } from "@/services/states";
 import { useClashInfo } from "@/hooks/use-clash";
@@ -20,6 +20,11 @@ import { BaseSearchBox } from "@/components/base/base-search-box";
 import { BaseStyledSelect } from "@/components/base/base-styled-select";
 import useSWRSubscription from "swr/subscription";
 import { createSockette } from "@/utils/websocket";
+import { tokens } from "./_theme";
+import {
+  GridKanbanRegular,
+  TextBulletListRegular,
+} from "@fluentui/react-icons";
 
 const initConn: IConnections = {
   uploadTotal: 0,
@@ -144,9 +149,12 @@ const ConnectionsPage = () => {
           <Box sx={{ mx: 1 }}>
             {t("Uploaded")}: {parseTraffic(upload)}
           </Box>
-          <IconButton
-            color="inherit"
+          <Button
+            icon={
+              isTableLayout ? <TextBulletListRegular /> : <GridKanbanRegular />
+            }
             size="small"
+            appearance="subtle"
             onClick={() =>
               setSetting((o) =>
                 o?.layout !== "table"
@@ -154,19 +162,8 @@ const ConnectionsPage = () => {
                   : { ...o, layout: "list" }
               )
             }
-          >
-            {isTableLayout ? (
-              <span title={t("List View")}>
-                <TableRowsRounded fontSize="inherit" />
-              </span>
-            ) : (
-              <span title={t("Table View")}>
-                <TableChartRounded fontSize="inherit" />
-              </span>
-            )}
-          </IconButton>
-
-          <Button size="small" variant="contained" onClick={onCloseAll}>
+          />
+          <Button onClick={onCloseAll}>
             <span style={{ whiteSpace: "nowrap" }}>{t("Close All")}</span>
           </Button>
         </Box>
@@ -204,7 +201,7 @@ const ConnectionsPage = () => {
           userSelect: "text",
           margin: "10px",
           borderRadius: "8px",
-          bgcolor: isDark ? "#282a36" : "#ffffff",
+          bgcolor: tokens.surface1,
         }}
       >
         {filterConn.length === 0 ? (

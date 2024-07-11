@@ -60,3 +60,11 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
 }
+
+.svgr-icon {
+  // color: currentColor;
+
+  path {
+    fill: currentColor;
+  }
+}

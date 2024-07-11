@@ -9,6 +9,7 @@ import RuleItem from "@/components/rule/rule-item";
 import { ProviderButton } from "@/components/rule/provider-button";
 import { useCustomTheme } from "@/components/layout/use-custom-theme";
 import { BaseSearchBox } from "@/components/base/base-search-box";
+import { tokens } from "./_theme";
 
 const RulesPage = () => {
   const { t } = useTranslation();
@@ -50,9 +51,7 @@ const RulesPage = () => {
         sx={{
           margin: "10px 0 0 10px",
           borderRadius: "8px",
-          bgcolor: isDark
-            ? "rgba(255, 255, 255, 0.04)"
-            : "rgba(255, 255, 255, 0.7)",
+          bgcolor: tokens.surface1,
         }}
       >
         {rules.length > 0 ? (
