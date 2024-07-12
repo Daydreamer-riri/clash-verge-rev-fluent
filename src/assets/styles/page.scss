@@ -3,6 +3,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  animation: page-enter 0.18s ease-in-out;
   > header {
     flex: 0 0 58px;
     width: 100%;
@@ -46,5 +47,16 @@
         }
       }
     }
+  }
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

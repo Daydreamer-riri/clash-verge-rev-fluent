@@ -40,7 +40,7 @@ export const lightTheme = {
   ...webLightTheme,
   overlay1: "rgba(0, 0, 0, 0.04)",
   overlay1Pressed: "rgba(0, 0, 0, 0.02)",
-  surface1: "rgba(255, 255, 255, 0.65)",
+  surface1: "rgba(255, 255, 255, 0.6)",
 };
 
 export const darkTheme = {

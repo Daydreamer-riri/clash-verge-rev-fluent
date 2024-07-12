@@ -70,7 +70,7 @@ const SettingPage = () => {
             sx={{
               borderRadius: 2,
               marginBottom: 1.5,
-              backgroundColor: isDark ? "#282a36" : "#ffffff",
+              // backgroundColor: isDark ? "#282a36" : "#ffffff",
             }}
           >
             <SettingSystem onError={onError} />
