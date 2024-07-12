@@ -41,6 +41,7 @@ export const lightTheme = {
   overlay1: "rgba(0, 0, 0, 0.04)",
   overlay1Pressed: "rgba(0, 0, 0, 0.02)",
   surface1: "rgba(255, 255, 255, 0.6)",
+  surface2: "rgba(255, 255, 255, 0.8)",
 };
 
 export const darkTheme = {
@@ -48,6 +49,7 @@ export const darkTheme = {
   overlay1: "rgba(255, 255, 255, 0.04)",
   overlay1Pressed: "rgba(255, 255, 255, 0.02)",
   surface1: "rgba(255, 255, 255, 0.04)",
+  surface2: "rgba(255, 255, 255, 0.08)",
 };
 
 export const tokens = themeToTokensObject(lightTheme);

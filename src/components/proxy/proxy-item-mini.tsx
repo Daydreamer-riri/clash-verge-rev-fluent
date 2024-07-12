@@ -6,6 +6,7 @@ import { BaseLoading } from "@/components/base";
 import delayManager from "@/services/delay";
 import { useVerge } from "@/hooks/use-verge";
 import { useTranslation } from "react-i18next";
+import { tokens } from "../../pages/_theme";
 
 interface Props {
   group: IProxyGroupItem;
@@ -56,14 +57,15 @@ export const ProxyItemMini = (props: Props) => {
       sx={[
         {
           height: 56,
-          borderRadius: 1.5,
+          borderRadius: "4px",
+          border: `1px solid ${tokens.colorNeutralStroke3}`,
           pl: 1.5,
           pr: 1,
           justifyContent: "space-between",
           alignItems: "center",
         },
         ({ palette: { mode, primary } }) => {
-          const bgcolor = mode === "light" ? "#ffffff" : "#24252f";
+          const bgcolor = tokens.surface2;
           const showDelay = delay > 0;
           const selectColor = mode === "light" ? primary.main : primary.light;
 

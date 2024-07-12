@@ -28,7 +28,7 @@ const useStyle = makeStyles({
     alignItems: "center",
     fontSize: tokens.fontSizeBase300,
     paddingInlineStart: "16px",
-    paddingBlock: "16px",
+    paddingBlock: "17px",
     padding: "8px",
     backgroundClip: "padding-box",
     border: `1px solid ${tokens.colorNeutralStroke2}`,
@@ -68,6 +68,11 @@ const useStyle = makeStyles({
       borderBottomLeftRadius: tokens.borderRadiusMedium,
       borderBottomRightRadius: tokens.borderRadiusMedium,
     },
+  },
+  rightContainer: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "flex-end",
   },
 });
 
@@ -120,8 +125,7 @@ export function Expander(props: ExpanderProps) {
       >
         {icon ? <div className={classes.icon}>{icon}</div> : null}
         {left}
-        {children}
-        {right}
+        <div className={classes.rightContainer}>{right}</div>
       </div>
       <div
         className={mergeClasses(

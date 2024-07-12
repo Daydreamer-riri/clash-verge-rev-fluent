@@ -10,6 +10,7 @@ import {
 import { ChevronRightRounded } from "@mui/icons-material";
 import CircularProgress from "@mui/material/CircularProgress";
 import isAsyncFunction from "@/utils/is-async-function";
+import { Body1, Body2, makeStyles } from "@fluentui/react-components";
 
 interface ItemProps {
   label: ReactNode;
@@ -83,3 +84,31 @@ export const SettingList: React.FC<{
     {props.children}
   </List>
 );
+
+const useStyle = makeStyles({
+  listContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+    marginTop: "8px",
+  },
+  titleWrap: {
+    marginBottom: "8px",
+  },
+});
+
+export function FluentSettingList({
+  children,
+  title,
+}: {
+  children: ReactNode;
+  title: string;
+}) {
+  const { listContainer, titleWrap } = useStyle();
+  return (
+    <div>
+      <Body2 className={titleWrap}>{title}</Body2>
+      <div className={listContainer}>{children}</div>
+    </div>
+  );
+}

@@ -15,6 +15,7 @@ import {
 import { BaseLoading } from "@/components/base";
 import delayManager from "@/services/delay";
 import { useVerge } from "@/hooks/use-verge";
+import { tokens } from "../../pages/_theme";
 
 interface Props {
   group: IProxyGroupItem;
@@ -81,7 +82,7 @@ export const ProxyItem = (props: Props) => {
         sx={[
           { borderRadius: 1 },
           ({ palette: { mode, primary } }) => {
-            const bgcolor = mode === "light" ? "#ffffff" : "#24252f";
+            const bgcolor = tokens.surface1;
             const selectColor = mode === "light" ? primary.main : primary.light;
             const showDelay = delay > 0;
 

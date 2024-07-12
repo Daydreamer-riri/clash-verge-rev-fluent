@@ -21,6 +21,7 @@ import { useThemeMode } from "@/services/states";
 import { useEffect, useMemo, useState } from "react";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import { downloadIconCache } from "@/services/cmds";
+import { tokens } from "../../pages/_theme";
 
 interface RenderProps {
   item: IRenderItem;
@@ -64,10 +65,11 @@ export const ProxyRender = (props: RenderProps) => {
       <ListItemButton
         dense
         style={{
-          background: itembackgroundcolor,
+          background: tokens.surface2,
+          border: `1px solid ${tokens.colorNeutralStroke3}`,
           height: "100%",
           margin: "8px 8px",
-          borderRadius: "8px",
+          borderRadius: "4px",
         }}
         onClick={() => onHeadState(group.name, { open: !headState?.open })}
       >
@@ -145,7 +147,7 @@ export const ProxyRender = (props: RenderProps) => {
         proxy={proxy!}
         selected={group.now === proxy?.name}
         showType={headState?.showType}
-        sx={{ py: 0, pl: 2 }}
+        sx={{ py: 0, pl: 2, bgcolor: tokens.surface1 }}
         onClick={() => onChangeProxy(group, proxy!)}
       />
     );
@@ -161,6 +163,7 @@ export const ProxyRender = (props: RenderProps) => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          bgcolor: tokens.surface1,
         }}
       >
         <InboxRounded sx={{ fontSize: "2.5em", color: "inherit" }} />

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useVerge } from "@/hooks/use-verge";
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
+import { Button } from "@fluentui/react-components";
 import {
   DndContext,
   closestCenter,
@@ -127,18 +128,10 @@ const TestPage = () => {
       title={t("Test")}
       header={
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => emit("verge://test-all")}
-          >
+          <Button onClick={() => emit("verge://test-all")}>
             {t("Test All")}
           </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => viewerRef.current?.create()}
-          >
+          <Button onClick={() => viewerRef.current?.create()}>
             {t("New")}
           </Button>
         </Box>
