@@ -65,7 +65,7 @@ export const ProxyItemMini = (props: Props) => {
           alignItems: "center",
         },
         ({ palette: { mode, primary } }) => {
-          const bgcolor = tokens.surface2;
+          const bgcolor = tokens.surface1;
           const showDelay = delay > 0;
           const selectColor = mode === "light" ? primary.main : primary.light;
 

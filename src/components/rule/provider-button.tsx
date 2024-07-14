@@ -76,7 +76,6 @@ export const ProviderButton = () => {
       >
         <DialogTrigger disableButtonEnhancement>
           <Button
-            appearance="outline"
             style={{ textTransform: "capitalize" }}
             onClick={() => setOpen(true)}
           >

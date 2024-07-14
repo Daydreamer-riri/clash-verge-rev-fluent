@@ -49,7 +49,10 @@ export const ProxyHead = (props: Props) => {
   }, [groupName, testUrl, verge?.default_latency_test]);
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, ...sx }}>
+    <Box
+      sx={{ display: "flex", alignItems: "center", gap: 0.5, ...sx }}
+      aria-label="proxy-content"
+    >
       <IconButton
         size="small"
         color="inherit"

@@ -1,6 +1,7 @@
-import { makeStyles, mergeClasses } from "@fluentui/react-components";
+import { Button, makeStyles, mergeClasses } from "@fluentui/react-components";
 import { createContext, useContext, useState } from "react";
 import { tokens } from "../../pages/_theme";
+import { ChevronDownRegular } from "@fluentui/react-icons";
 
 export interface ExpanderProps {
   children?: React.ReactNode;
@@ -12,6 +13,7 @@ export interface ExpanderProps {
   right?: React.ReactNode;
   expanded?: boolean;
   onExpandChange?: (expanded: boolean) => void;
+  defaultExpanded?: boolean;
 }
 
 const useStyle = makeStyles({
@@ -33,6 +35,10 @@ const useStyle = makeStyles({
     backgroundClip: "padding-box",
     border: `1px solid ${tokens.colorNeutralStroke2}`,
     color: tokens.colorNeutralForeground1,
+
+    ":hover": {
+      "--chevron-button-bg": tokens.overlay1Hover,
+    },
   },
   expandContent: {
     // @ts-expect-error
@@ -57,9 +63,21 @@ const useStyle = makeStyles({
     transform: "translateY(0)",
     transition: `${tokens.durationFast} ${tokens.curveEasyEase} transform`,
   },
-  expandedChevron: {
-    transform: "rotate(180deg)",
+  chevronButton: {
+    color: tokens.colorNeutralForeground2 + " !important",
+    "& > .fui-Button__icon": {
+      color: tokens.colorNeutralForeground2 + " !important",
+    },
+    background: "var(--chevron-button-bg)",
+    ":hover": {
+      background: "var(--chevron-button-bg)",
+    },
+  },
+  chevronIcon: {
     transition: `${tokens.durationFast} ${tokens.curveEasyEase} transform`,
+  },
+  expandedChevronIcon: {
+    transform: "rotate(-180deg)",
   },
   contentListItemHeader: {
     borderRadius: tokens.borderRadiusNone,
@@ -73,6 +91,9 @@ const useStyle = makeStyles({
     flex: 1,
     display: "flex",
     justifyContent: "flex-end",
+  },
+  pointer: {
+    cursor: "pointer",
   },
 });
 
@@ -93,8 +114,9 @@ export function Expander(props: ExpanderProps) {
     right,
     expanded,
     onExpandChange,
+    defaultExpanded,
   } = props;
-  const [isExpanded, setIsExpanded] = useState(expanded);
+  const [isExpanded, setIsExpanded] = useState(expanded ?? defaultExpanded);
   const isControlled = expanded !== undefined;
   const realExpanded = expanded ?? isExpanded;
 
@@ -119,13 +141,30 @@ export function Expander(props: ExpanderProps) {
           classes.expandHeader,
           realExpanded && classes.expandedHeader,
           classNames?.header,
-          isChildOfList && classes.contentListItemHeader
+          isChildOfList && classes.contentListItemHeader,
+          canExpand && classes.pointer
         )}
         onClick={canExpand ? handleExpandChange : undefined}
       >
         {icon ? <div className={classes.icon}>{icon}</div> : null}
         {left}
-        <div className={classes.rightContainer}>{right}</div>
+        <div className={classes.rightContainer}>
+          {right}
+          {canExpand ? (
+            <Button
+              appearance="subtle"
+              icon={
+                <ChevronDownRegular
+                  className={mergeClasses(
+                    classes.chevronIcon,
+                    realExpanded && classes.expandedChevronIcon
+                  )}
+                />
+              }
+              className={mergeClasses(classes.chevronButton)}
+            />
+          ) : null}
+        </div>
       </div>
       <div
         className={mergeClasses(

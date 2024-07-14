@@ -3,7 +3,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  animation: page-enter 0.18s ease-in-out;
+  animation: page-enter 0.18s var(--curveEasyEase);
   > header {
     flex: 0 0 58px;
     width: 100%;

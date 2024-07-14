@@ -39,6 +39,7 @@ export const defaultDarkTheme = {
 export const lightTheme = {
   ...webLightTheme,
   overlay1: "rgba(0, 0, 0, 0.04)",
+  overlay1Hover: "rgba(0, 0, 0, 0.08)",
   overlay1Pressed: "rgba(0, 0, 0, 0.02)",
   surface1: "rgba(255, 255, 255, 0.6)",
   surface2: "rgba(255, 255, 255, 0.8)",
@@ -47,6 +48,7 @@ export const lightTheme = {
 export const darkTheme = {
   ...webDarkTheme,
   overlay1: "rgba(255, 255, 255, 0.04)",
+  overlay1Hover: "rgba(255, 255, 255, 0.08)",
   overlay1Pressed: "rgba(255, 255, 255, 0.02)",
   surface1: "rgba(255, 255, 255, 0.04)",
   surface2: "rgba(255, 255, 255, 0.08)",
