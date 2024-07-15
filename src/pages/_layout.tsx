@@ -14,6 +14,9 @@ import {
   webLightTheme,
   webDarkTheme,
   Theme,
+  Subtitle2Stronger,
+  Caption1Stronger,
+  makeStyles,
 } from "@fluentui/react-components";
 import { listen } from "@tauri-apps/api/event";
 import { appWindow } from "@tauri-apps/api/window";
@@ -21,6 +24,7 @@ import { routers } from "./_routers";
 import { getAxios } from "@/services/api";
 import { useVerge } from "@/hooks/use-verge";
 import LogoSvg from "@/assets/image/logo.svg?react";
+import logo from "@/assets/image/app-icon.png";
 import iconLight from "@/assets/image/icon_light.svg?react";
 import iconDark from "@/assets/image/icon_dark.svg?react";
 import { useThemeMode } from "@/services/states";
@@ -44,6 +48,15 @@ export let portableFlag = false;
 dayjs.extend(relativeTime);
 
 const OS = getSystem();
+
+const useStyle = makeStyles({
+  logoText: {
+    background: "linear-gradient(90deg, #4b50c9 0%, #4fdfd8 100%)",
+    backgroundClip: "text",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+  },
+});
 
 const Layout = () => {
   const mode = useThemeMode();
@@ -111,6 +124,8 @@ const Layout = () => {
     }
   }, [language, start_page]);
 
+  const classes = useStyle();
+
   return (
     <SWRConfig value={{ errorRetryCount: 3 }}>
       <ThemeProvider theme={theme}>
@@ -151,7 +166,11 @@ const Layout = () => {
               className="layout__left"
               style={OS === "windows" ? { padding: "0 16px" } : {}}
             >
-              <div className="the-logo" data-tauri-drag-region="true">
+              <div
+                className="the-logo"
+                data-tauri-drag-region="true"
+                style={{ paddingRight: 0 }}
+              >
                 <div
                   style={{
                     height: "27px",
@@ -159,7 +178,20 @@ const Layout = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <SvgIcon
+                  <img
+                    src={logo}
+                    style={{
+                      marginTop: "-12px",
+                      marginRight: "5px",
+                      marginLeft: "-24px",
+                      height: "48px",
+                      width: "48px",
+                    }}
+                  ></img>
+                  <Subtitle2Stronger>
+                    Clash <span className={classes.logoText}>verge</span>
+                  </Subtitle2Stronger>
+                  {/* <SvgIcon
                     component={isDark ? iconDark : iconLight}
                     style={{
                       height: "36px",
@@ -169,8 +201,8 @@ const Layout = () => {
                       marginLeft: "-3px",
                     }}
                     inheritViewBox
-                  />
-                  <LogoSvg fill={isDark ? "white" : "black"} />
+                  /> */}
+                  {/* <LogoSvg fill={isDark ? "white" : "black"} /> */}
                 </div>
                 {<UpdateButton className="the-newbtn" />}
               </div>

@@ -20,6 +20,8 @@ import delayManager from "@/services/delay";
 import { cmdTestDelay, downloadIconCache } from "@/services/cmds";
 import { listen, UnlistenFn } from "@tauri-apps/api/event";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
+import { Button } from "@fluentui/react-components";
+import { tokens } from "../../pages/_theme";
 
 interface Props {
   id: string;
@@ -166,45 +168,45 @@ export const TestItem = (props: Props) => {
           }}
         >
           {delay === -2 && (
-            <Widget>
+            <Button disabled appearance="transparent">
               <BaseLoading />
-            </Widget>
+            </Button>
           )}
 
           {delay === -1 && (
-            <Widget
+            <Button
               className="the-check"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 onDelay();
               }}
-              sx={({ palette }) => ({
-                ":hover": { bgcolor: alpha(palette.primary.main, 0.15) },
-              })}
+              appearance="subtle"
             >
               {t("Test")}
-            </Widget>
+            </Button>
           )}
 
           {delay >= 0 && (
             // 显示延迟
-            <Widget
+            <Button
               className="the-delay"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 onDelay();
               }}
-              color={delayManager.formatDelayColor(delay)}
-              sx={({ palette }) => ({
-                ":hover": {
-                  bgcolor: alpha(palette.primary.main, 0.15),
-                },
-              })}
+              style={{
+                color: {
+                  "error.main": tokens.colorPaletteRedForeground1,
+                  "success.main": tokens.colorStatusSuccessForeground1,
+                  "warning.main": tokens.colorStatusWarningForeground1,
+                }[delayManager.formatDelayColor(delay)],
+              }}
+              appearance="subtle"
             >
               {delayManager.formatDelay(delay)}
-            </Widget>
+            </Button>
           )}
         </Box>
       </TestBox>
