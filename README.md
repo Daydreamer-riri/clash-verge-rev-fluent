@@ -16,8 +16,8 @@ A Clash Meta GUI based on <a href="https://github.com/tauri-apps/tauri">Tauri</a
 | ![预览](./docs/preview_dark.png) | ![预览](./docs/preview_light.png) |
 
 > [!IMPORTANT]
-> 该项目为[clash-verge-rev](https://github.com/clash-verge-rev/clash-verge-rev)的 fork，修改为了 Fluent design 风格界面。不做任何功能性维护。本项目的会定期合并上游代码，做出我认为必要的 UI 修改后发布安装包。
-> 目前大部分第一层寂寞风格已经修改为 fluent 风格，还存在部分内部页面有待修改。欢迎 PR！
+> 该项目为[clash-verge-rev](https://github.com/clash-verge-rev/clash-verge-rev)的 fork，修改为了 fluent design 风格界面。不做任何功能性维护。本项目的会定期合并上游代码，做出我认为必要的 UI 修改后发布安装包。
+> 目前大部分第一层界面风格已经修改为 fluent 风格，还存在部分内部页面有待修改。欢迎 PR！
 
 ## Install
 
