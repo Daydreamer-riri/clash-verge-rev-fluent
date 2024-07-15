@@ -32,6 +32,7 @@ import parseTraffic from "@/utils/parse-traffic";
 import { ConfirmViewer } from "@/components/profile/confirm-viewer";
 import { open } from "@tauri-apps/api/shell";
 import { ProxiesEditorViewer } from "./proxies-editor-viewer";
+import { tokens } from "../../pages/_theme";
 const round = keyframes`
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

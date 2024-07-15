@@ -18,6 +18,26 @@ import { useVerge } from "@/hooks/use-verge";
 import type { HeadState } from "./use-head-state";
 import type { ProxySortType } from "./use-filter-sort";
 import delayManager from "@/services/delay";
+import { Button, Input } from "@fluentui/react-components";
+import {
+  ArrowSortDownLinesFilled,
+  ArrowSortDownLinesRegular,
+  ClockRegular,
+  EyeFilled,
+  EyeOffFilled,
+  EyeOffRegular,
+  EyeRegular,
+  FilterAddRegular,
+  FilterDismissRegular,
+  FilterRegular,
+  LiveOffRegular,
+  LiveRegular,
+  MyLocationFilled,
+  MyLocationRegular,
+  NetworkCheckFilled,
+  TextSortAscendingFilled,
+  TextSortAscendingRegular,
+} from "@fluentui/react-icons";
 
 interface Props {
   sx?: SxProps;
@@ -53,16 +73,16 @@ export const ProxyHead = (props: Props) => {
       sx={{ display: "flex", alignItems: "center", gap: 0.5, ...sx }}
       aria-label="proxy-content"
     >
-      <IconButton
+      <Button
         size="small"
         color="inherit"
         title={t("Location")}
         onClick={props.onLocation}
-      >
-        <MyLocationRounded />
-      </IconButton>
+        icon={<MyLocationRegular />}
+        appearance="subtle"
+      />
 
-      <IconButton
+      <Button
         size="small"
         color="inherit"
         title={t("Delay check")}
@@ -73,11 +93,11 @@ export const ProxyHead = (props: Props) => {
           }
           props.onCheckDelay();
         }}
-      >
-        <NetworkCheckRounded />
-      </IconButton>
+        icon={<NetworkCheckFilled />}
+        appearance="subtle"
+      />
 
-      <IconButton
+      <Button
         size="small"
         color="inherit"
         title={
@@ -88,77 +108,74 @@ export const ProxyHead = (props: Props) => {
         onClick={() =>
           onHeadState({ sortType: ((sortType + 1) % 3) as ProxySortType })
         }
-      >
-        {sortType !== 1 && sortType !== 2 && <SortRounded />}
-        {sortType === 1 && <AccessTimeRounded />}
-        {sortType === 2 && <SortByAlphaRounded />}
-      </IconButton>
+        appearance="subtle"
+        icon={
+          <>
+            {sortType !== 1 && sortType !== 2 && <ArrowSortDownLinesRegular />}
+            {sortType === 1 && <ClockRegular />}
+            {sortType === 2 && <TextSortAscendingRegular />}
+          </>
+        }
+      />
 
-      <IconButton
-        size="small"
+      <Button
         color="inherit"
         title={t("Delay check URL")}
         onClick={() =>
           onHeadState({ textState: textState === "url" ? null : "url" })
         }
-      >
-        {textState === "url" ? (
-          <WifiTetheringRounded />
-        ) : (
-          <WifiTetheringOffRounded />
-        )}
-      </IconButton>
+        icon={textState === "url" ? <LiveRegular /> : <LiveOffRegular />}
+        appearance="subtle"
+      />
 
-      <IconButton
-        size="small"
+      <Button
         color="inherit"
         title={showType ? t("Proxy basic") : t("Proxy detail")}
         onClick={() => onHeadState({ showType: !showType })}
-      >
-        {showType ? <VisibilityRounded /> : <VisibilityOffRounded />}
-      </IconButton>
+        icon={showType ? <EyeFilled /> : <EyeOffFilled />}
+        appearance="subtle"
+      />
 
-      <IconButton
-        size="small"
+      <Button
         color="inherit"
         title={t("Filter")}
         onClick={() =>
           onHeadState({ textState: textState === "filter" ? null : "filter" })
         }
-      >
-        {textState === "filter" ? (
-          <FilterAltRounded />
-        ) : (
-          <FilterAltOffRounded />
-        )}
-      </IconButton>
+        icon={
+          textState === "filter" ? (
+            <FilterDismissRegular />
+          ) : (
+            <FilterAddRegular />
+          )
+        }
+        appearance="subtle"
+      />
 
       {textState === "filter" && (
-        <TextField
+        <Input
           autoComplete="new-password"
           autoFocus={autoFocus}
-          hiddenLabel
           value={filterText}
-          size="small"
-          variant="outlined"
+          // size="small"
           placeholder={t("Filter conditions")}
           onChange={(e) => onHeadState({ filterText: e.target.value })}
-          sx={{ ml: 0.5, flex: "1 1 auto", input: { py: 0.65, px: 1 } }}
+          // sx={{ ml: 0.5, flex: "1 1 auto", input: { py: 0.65, px: 1 } }}
+          appearance="outline"
+          style={{ flex: "1 1 auto", marginLeft: "0.5rem" }}
         />
       )}
 
       {textState === "url" && (
-        <TextField
+        <Input
           autoComplete="new-password"
           autoFocus={autoFocus}
-          hiddenLabel
           autoSave="off"
           value={testUrl}
-          size="small"
-          variant="outlined"
+          appearance="outline"
           placeholder={t("Delay check URL")}
           onChange={(e) => onHeadState({ testUrl: e.target.value })}
-          sx={{ ml: 0.5, flex: "1 1 auto", input: { py: 0.65, px: 1 } }}
+          style={{ flex: "1 1 auto", marginLeft: "0.5rem" }}
         />
       )}
     </Box>
