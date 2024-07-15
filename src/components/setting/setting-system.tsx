@@ -16,8 +16,29 @@ import { SysproxyViewer } from "./mods/sysproxy-viewer";
 import { TunViewer } from "./mods/tun-viewer";
 import { TooltipIcon } from "@/components/base/base-tooltip-icon";
 import { Expander } from "../base/Expander";
-import { Button, Switch, Tooltip } from "@fluentui/react-components";
+import {
+  Button,
+  Caption1,
+  Caption2,
+  makeStyles,
+  Switch,
+  Tooltip,
+} from "@fluentui/react-components";
 import { InfoRegular, SettingsRegular } from "@fluentui/react-icons";
+import { tokens } from "../../pages/_theme";
+
+const useStyle = makeStyles({
+  expander: {
+    paddingBlock: "16px",
+  },
+  caption: {
+    display: "block",
+    color: tokens.colorNeutralForeground4,
+    paddingBottom: "3px",
+  },
+});
+
+export { useStyle as useSettingSystemStyle };
 
 interface Props {
   onError?: (err: Error) => void;
@@ -53,6 +74,8 @@ const SettingSystem = ({ onError }: Props) => {
     mutateVerge({ ...verge, ...patch }, false);
   };
 
+  const classes = useStyle();
+
   return (
     <>
       <FluentSettingList title={t("System Setting")}>
@@ -62,95 +85,97 @@ const SettingSystem = ({ onError }: Props) => {
 
         <Expander
           left={
-            <>
+            <div>
               {t("Tun Mode")}
-              <Tooltip relationship="description" content={t("Tun Mode Info")}>
-                <Button
-                  onClick={() => tunRef.current?.open()}
-                  size="small"
-                  appearance="subtle"
-                  icon={<SettingsRegular fontSize={16} />}
-                />
-              </Tooltip>
-            </>
+              <Caption1 className={classes.caption}>
+                {t("Tun Mode Info")}
+              </Caption1>
+            </div>
           }
           right={
-            <GuardState
-              value={enable_tun_mode ?? false}
-              valueProps="checked"
-              onCatch={onError}
-              onFormat={onSwitchFormat}
-              onChange={(e) => onChangeData({ enable_tun_mode: e })}
-              onGuard={(e) => patchVerge({ enable_tun_mode: e })}
-            >
-              <Switch />
-            </GuardState>
-          }
-        ></Expander>
-
-        <Expander
-          left={
             <>
-              {t("Service Mode")}
-              <Tooltip
-                relationship="description"
-                content={t("Service Mode Info")}
-              >
-                <Button
-                  onClick={() => serviceRef.current?.open()}
-                  size="small"
-                  appearance="subtle"
-                  icon={<SettingsRegular fontSize={16} />}
-                />
-              </Tooltip>
-            </>
-          }
-          right={
-            <GuardState
-              value={enable_service_mode ?? false}
-              valueProps="checked"
-              onCatch={onError}
-              onFormat={onSwitchFormat}
-              onChange={(e) => onChangeData({ enable_service_mode: e })}
-              onGuard={(e) => patchVerge({ enable_service_mode: e })}
-            >
-              <Switch
-                disabled={
-                  serviceStatus !== "active" && serviceStatus !== "installed"
-                }
+              <Button
+                onClick={() => tunRef.current?.open()}
+                appearance="subtle"
+                icon={<SettingsRegular fontSize={16} />}
               />
-            </GuardState>
+              <GuardState
+                value={enable_tun_mode ?? false}
+                valueProps="checked"
+                onCatch={onError}
+                onFormat={onSwitchFormat}
+                onChange={(e) => onChangeData({ enable_tun_mode: e })}
+                onGuard={(e) => patchVerge({ enable_tun_mode: e })}
+              >
+                <Switch />
+              </GuardState>
+            </>
           }
+          className={{ header: classes.expander }}
         ></Expander>
 
         <Expander
           left={
-            <>
-              {t("System Proxy")}
-              <Tooltip
-                relationship="description"
-                content={t("System Proxy Info")}
-              >
-                <Button
-                  onClick={() => sysproxyRef.current?.open()}
-                  size="small"
-                  appearance="subtle"
-                  icon={<SettingsRegular fontSize={16} />}
-                />
-              </Tooltip>
-            </>
+            <div>
+              {t("Service Mode")}
+              <Caption1 className={classes.caption}>
+                {t("Service Mode Info")}
+              </Caption1>
+            </div>
           }
           right={
-            <GuardState
-              value={enable_system_proxy ?? false}
-              valueProps="checked"
-              onCatch={onError}
-              onFormat={onSwitchFormat}
-              onChange={(e) => onChangeData({ enable_system_proxy: e })}
-              onGuard={(e) => patchVerge({ enable_system_proxy: e })}
-            >
-              <Switch />
-            </GuardState>
+            <>
+              <Button
+                onClick={() => serviceRef.current?.open()}
+                appearance="subtle"
+                icon={<SettingsRegular fontSize={16} />}
+              />
+              <GuardState
+                value={enable_service_mode ?? false}
+                valueProps="checked"
+                onCatch={onError}
+                onFormat={onSwitchFormat}
+                onChange={(e) => onChangeData({ enable_service_mode: e })}
+                onGuard={(e) => patchVerge({ enable_service_mode: e })}
+              >
+                <Switch
+                  disabled={
+                    serviceStatus !== "active" && serviceStatus !== "installed"
+                  }
+                />
+              </GuardState>
+            </>
+          }
+          className={{ header: classes.expander }}
+        ></Expander>
+
+        <Expander
+          left={
+            <div>
+              {t("System Proxy")}
+              <Caption1 className={classes.caption}>
+                {t("System Proxy Info")}
+              </Caption1>
+            </div>
+          }
+          right={
+            <>
+              <Button
+                onClick={() => sysproxyRef.current?.open()}
+                appearance="subtle"
+                icon={<SettingsRegular fontSize={16} />}
+              />
+              <GuardState
+                value={enable_system_proxy ?? false}
+                valueProps="checked"
+                onCatch={onError}
+                onFormat={onSwitchFormat}
+                onChange={(e) => onChangeData({ enable_system_proxy: e })}
+                onGuard={(e) => patchVerge({ enable_system_proxy: e })}
+              >
+                <Switch />
+              </GuardState>
+            </>
           }
         />
         <Expander
@@ -171,15 +196,12 @@ const SettingSystem = ({ onError }: Props) => {
 
         <Expander
           left={
-            <>
+            <div>
               {t("Silent Start")}
-              <Tooltip
-                relationship="description"
-                content={t("Silent Start Info")}
-              >
-                <InfoRegular style={{ marginLeft: 8 }} />
-              </Tooltip>
-            </>
+              <Caption1 className={classes.caption}>
+                {t("Silent Start Info")}
+              </Caption1>
+            </div>
           }
           right={
             <GuardState
@@ -193,6 +215,7 @@ const SettingSystem = ({ onError }: Props) => {
               <Switch />
             </GuardState>
           }
+          className={{ header: classes.expander }}
         />
       </FluentSettingList>
     </>

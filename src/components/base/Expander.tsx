@@ -14,6 +14,7 @@ export interface ExpanderProps {
   expanded?: boolean;
   onExpandChange?: (expanded: boolean) => void;
   defaultExpanded?: boolean;
+  onClick?: () => void;
 }
 
 const useStyle = makeStyles({
@@ -79,18 +80,22 @@ const useStyle = makeStyles({
   expandedChevronIcon: {
     transform: "rotate(-180deg)",
   },
+  contentListItemRoot: {
+    "&:last-child": {
+      "--border-bottom-radius": tokens.borderRadiusMedium,
+    },
+  },
   contentListItemHeader: {
     borderRadius: tokens.borderRadiusNone,
     borderTop: "none",
-    "&:last-child": {
-      borderBottomLeftRadius: tokens.borderRadiusMedium,
-      borderBottomRightRadius: tokens.borderRadiusMedium,
-    },
+    borderBottomLeftRadius: "var(--border-bottom-radius)",
+    borderBottomRightRadius: "var(--border-bottom-radius)",
   },
   rightContainer: {
     flex: 1,
     display: "flex",
     justifyContent: "flex-end",
+    marginLeft: "16px",
   },
   pointer: {
     cursor: "pointer",
@@ -115,6 +120,7 @@ export function Expander(props: ExpanderProps) {
     expanded,
     onExpandChange,
     defaultExpanded,
+    onClick,
   } = props;
   const [isExpanded, setIsExpanded] = useState(expanded ?? defaultExpanded);
   const isControlled = expanded !== undefined;
@@ -135,7 +141,14 @@ export function Expander(props: ExpanderProps) {
   const isChildOfList = listContext !== null;
 
   return (
-    <div className={mergeClasses(classes.root, classNames?.root)}>
+    <div
+      style={isChildOfList ? { background: "transparent" } : undefined}
+      className={mergeClasses(
+        classes.root,
+        classNames?.root,
+        isChildOfList && classes.contentListItemRoot
+      )}
+    >
       <div
         className={mergeClasses(
           classes.expandHeader,
@@ -144,7 +157,7 @@ export function Expander(props: ExpanderProps) {
           isChildOfList && classes.contentListItemHeader,
           canExpand && classes.pointer
         )}
-        onClick={canExpand ? handleExpandChange : undefined}
+        onClick={canExpand ? handleExpandChange : onClick}
       >
         {icon ? <div className={classes.icon}>{icon}</div> : null}
         {left}
@@ -166,17 +179,19 @@ export function Expander(props: ExpanderProps) {
           ) : null}
         </div>
       </div>
-      <div
-        className={mergeClasses(
-          classes.expandContent,
-          realExpanded && classes.expandedContent,
-          classNames?.content
-        )}
-      >
-        <ListContext.Provider value={realExpanded ?? null}>
-          {props.content}
-        </ListContext.Provider>
-      </div>
+      {realExpanded && (
+        <div
+          className={mergeClasses(
+            classes.expandContent,
+            realExpanded && classes.expandedContent,
+            classNames?.content
+          )}
+        >
+          <ListContext.Provider value={realExpanded ?? null}>
+            {props.content}
+          </ListContext.Provider>
+        </div>
+      )}
     </div>
   );
 }

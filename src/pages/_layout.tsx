@@ -17,6 +17,7 @@ import {
   Subtitle2Stronger,
   Caption1Stronger,
   makeStyles,
+  Toaster,
 } from "@fluentui/react-components";
 import { listen } from "@tauri-apps/api/event";
 import { appWindow } from "@tauri-apps/api/window";
@@ -130,6 +131,7 @@ const Layout = () => {
     <SWRConfig value={{ errorRetryCount: 3 }}>
       <ThemeProvider theme={theme}>
         <FluentProviderWithTheme>
+          <Toaster />
           <Paper
             square
             elevation={0}

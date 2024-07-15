@@ -10,7 +10,15 @@ import {
 import { ChevronRightRounded } from "@mui/icons-material";
 import CircularProgress from "@mui/material/CircularProgress";
 import isAsyncFunction from "@/utils/is-async-function";
-import { Body1, Body2, makeStyles } from "@fluentui/react-components";
+import {
+  Body1,
+  Body2,
+  makeStyles,
+  mergeClasses,
+} from "@fluentui/react-components";
+import { Expander, ExpanderProps } from "../../base/Expander";
+import { tokens } from "../../../pages/_theme";
+import { ChevronRightRegular } from "@fluentui/react-icons";
 
 interface ItemProps {
   label: ReactNode;
@@ -89,7 +97,7 @@ const useStyle = makeStyles({
   listContainer: {
     display: "flex",
     flexDirection: "column",
-    gap: "8px",
+    gap: "4px",
     marginTop: "8px",
   },
   titleWrap: {
@@ -110,5 +118,56 @@ export function FluentSettingList({
       <Body2 className={titleWrap}>{title}</Body2>
       <div className={listContainer}>{children}</div>
     </div>
+  );
+}
+
+const useItemStyle = makeStyles({
+  header: {
+    paddingBlock: "16px",
+  },
+  canClick: {
+    cursor: "pointer",
+    transition: `background-color ${tokens.durationFast} ${tokens.curveEasyEase}`,
+    ":hover": {
+      background: tokens.overlay1Hover,
+    },
+    ":active": {
+      background: tokens.overlay1Pressed,
+    },
+  },
+});
+
+export function FluentSettingItem({
+  label,
+  extra,
+  children,
+  secondary,
+  onClick,
+  canExpand,
+  content,
+}: ItemProps & ExpanderProps) {
+  const classes = useItemStyle();
+  const canClick = !!onClick;
+
+  const right = canClick ? (
+    <>
+      {children}
+      <ChevronRightRegular style={{ fontSize: 20, marginRight: 5 }} />
+    </>
+  ) : (
+    children
+  );
+
+  return (
+    <Expander
+      content={content}
+      left={label}
+      right={right}
+      className={{
+        header: mergeClasses(classes.header, canClick && classes.canClick),
+      }}
+      canExpand={canExpand}
+      onClick={onClick}
+    />
   );
 }

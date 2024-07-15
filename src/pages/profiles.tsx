@@ -51,7 +51,14 @@ import { listen } from "@tauri-apps/api/event";
 import { readTextFile } from "@tauri-apps/api/fs";
 import { readText } from "@tauri-apps/api/clipboard";
 import { Button, Input, Spinner } from "@fluentui/react-components";
-import { ClipboardPasteRegular, DismissRegular } from "@fluentui/react-icons";
+import {
+  ArrowClockwiseRegular,
+  ClipboardPasteRegular,
+  DismissRegular,
+  DocumentBulletListRegular,
+  FireFilled,
+} from "@fluentui/react-icons";
+import { tokens } from "./_theme";
 
 const ProfilePage = () => {
   const { t } = useTranslation();
@@ -261,32 +268,25 @@ const ProfilePage = () => {
       contentStyle={{ height: "100%" }}
       header={
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconButton
-            size="small"
-            color="inherit"
+          <Button
+            icon={<ArrowClockwiseRegular />}
             title={t("Update All Profiles")}
             onClick={onUpdateAll}
-          >
-            <RefreshRounded />
-          </IconButton>
+            appearance="subtle"
+          ></Button>
 
-          <IconButton
-            size="small"
-            color="inherit"
+          <Button
+            icon={<DocumentBulletListRegular />}
             title={t("View Runtime Config")}
             onClick={() => configRef.current?.open()}
-          >
-            <TextSnippetOutlined />
-          </IconButton>
-
-          <IconButton
-            size="small"
-            color="primary"
+            appearance="subtle"
+          />
+          <Button
+            icon={<FireFilled />}
             title={t("Reactivate Profiles")}
             onClick={onEnhance}
-          >
-            <LocalFireDepartmentRounded />
-          </IconButton>
+            appearance="subtle"
+          />
         </Box>
       }
     >
