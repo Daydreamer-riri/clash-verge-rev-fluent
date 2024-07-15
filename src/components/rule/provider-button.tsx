@@ -2,7 +2,6 @@ import dayjs from "dayjs";
 import useSWR, { mutate } from "swr";
 import { useState } from "react";
 import {
-  Button,
   IconButton,
   List,
   ListItem,
@@ -14,10 +13,19 @@ import {
   Divider,
   keyframes,
 } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogBody,
+  DialogContent,
+  DialogSurface,
+  DialogTitle,
+  DialogTrigger,
+} from "@fluentui/react-components";
 import { RefreshRounded } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { getRuleProviders, ruleProviderUpdate } from "@/services/api";
-import { BaseDialog } from "../base";
 
 const round = keyframes`
   from { transform: rotate(0deg); }
@@ -61,23 +69,27 @@ export const ProviderButton = () => {
 
   return (
     <>
-      <Button
-        size="small"
-        variant="outlined"
-        sx={{ textTransform: "capitalize" }}
-        onClick={() => setOpen(true)}
-      >
-        {t("Rule Provider")}
-      </Button>
-
-      <BaseDialog
+      <Dialog
         open={open}
-        title={
-          <Box display="flex" justifyContent="space-between" gap={1}>
+        onOpenChange={(_, data) => setOpen(data.open)}
+        modalType="non-modal"
+      >
+        <DialogTrigger disableButtonEnhancement>
+          <Button
+            style={{ textTransform: "capitalize" }}
+            onClick={() => setOpen(true)}
+          >
+            {t("Rule Provider")}
+          </Button>
+        </DialogTrigger>
+
+        <DialogSurface>
+          <DialogBody>
+            <DialogTitle>{t("Rule Provider")}</DialogTitle>
+            {/* <Box display="flex" justifyContent="space-between" gap={1}>
             <Typography variant="h6">{t("Rule Provider")}</Typography>
             <Button
-              variant="contained"
-              size="small"
+              appearance="primary"
               onClick={async () => {
                 Object.entries(data || {}).forEach(async ([key], index) => {
                   await handleUpdate(key, index);
@@ -86,79 +98,92 @@ export const ProviderButton = () => {
             >
               {t("Update All")}
             </Button>
-          </Box>
-        }
-        contentSx={{ width: 400 }}
-        disableOk
-        cancelBtn={t("Close")}
-        onClose={() => setOpen(false)}
-        onCancel={() => setOpen(false)}
-      >
-        <List sx={{ py: 0, minHeight: 250 }}>
-          {Object.entries(data || {}).map(([key, item], index) => {
-            const time = dayjs(item.updatedAt);
-            return (
-              <>
-                <ListItem
-                  sx={{
-                    p: 0,
-                    borderRadius: "10px",
-                    border: "solid 2px var(--divider-color)",
-                    mb: 1,
-                  }}
-                  key={key}
-                >
-                  <ListItemText
-                    sx={{ px: 1 }}
-                    primary={
-                      <>
-                        <Typography
-                          variant="h6"
-                          component="span"
-                          noWrap
-                          title={key}
+          </Box> */}
+            <DialogContent style={{ maxHeight: "70vh" }}>
+              <List sx={{ py: 0, minHeight: 250 }}>
+                {Object.entries(data || {}).map(([key, item], index) => {
+                  const time = dayjs(item.updatedAt);
+                  return (
+                    <>
+                      <ListItem
+                        sx={{
+                          p: 0,
+                          borderRadius: "10px",
+                          border: "solid 2px var(--divider-color)",
+                          mb: 1,
+                        }}
+                        key={key}
+                      >
+                        <ListItemText
+                          sx={{ px: 1 }}
+                          primary={
+                            <>
+                              <Typography
+                                variant="h6"
+                                component="span"
+                                noWrap
+                                title={key}
+                              >
+                                {key}
+                              </Typography>
+                              <TypeBox
+                                component="span"
+                                sx={{ marginLeft: "8px" }}
+                              >
+                                {item.ruleCount}
+                              </TypeBox>
+                            </>
+                          }
+                          secondary={
+                            <>
+                              <StyledTypeBox component="span">
+                                {item.vehicleType}
+                              </StyledTypeBox>
+                              <StyledTypeBox component="span">
+                                {item.behavior}
+                              </StyledTypeBox>
+                              <StyledTypeBox component="span">
+                                {t("Update At")} {time.fromNow()}
+                              </StyledTypeBox>
+                            </>
+                          }
+                        />
+                        <Divider orientation="vertical" flexItem />
+                        <IconButton
+                          size="small"
+                          color="inherit"
+                          title={`${t("Update")}${t("Rule Provider")}`}
+                          onClick={() => handleUpdate(key, index)}
+                          sx={{
+                            animation: updating[index]
+                              ? `1s linear infinite ${round}`
+                              : "none",
+                          }}
                         >
-                          {key}
-                        </Typography>
-                        <TypeBox component="span" sx={{ marginLeft: "8px" }}>
-                          {item.ruleCount}
-                        </TypeBox>
-                      </>
-                    }
-                    secondary={
-                      <>
-                        <StyledTypeBox component="span">
-                          {item.vehicleType}
-                        </StyledTypeBox>
-                        <StyledTypeBox component="span">
-                          {item.behavior}
-                        </StyledTypeBox>
-                        <StyledTypeBox component="span">
-                          {t("Update At")} {time.fromNow()}
-                        </StyledTypeBox>
-                      </>
-                    }
-                  />
-                  <Divider orientation="vertical" flexItem />
-                  <IconButton
-                    size="small"
-                    color="inherit"
-                    title={`${t("Update")}${t("Rule Provider")}`}
-                    onClick={() => handleUpdate(key, index)}
-                    sx={{
-                      animation: updating[index]
-                        ? `1s linear infinite ${round}`
-                        : "none",
-                    }}
-                  >
-                    <RefreshRounded />
-                  </IconButton>
-                </ListItem>
-              </>
-            );
-          })}
-        </List>
-      </BaseDialog>
+                          <RefreshRounded />
+                        </IconButton>
+                      </ListItem>
+                    </>
+                  );
+                })}
+              </List>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpen(false)}>{t("Close")}</Button>
+              <Button
+                appearance="primary"
+                onClick={async () => {
+                  Object.entries(data || {}).forEach(async ([key], index) => {
+                    await handleUpdate(key, index);
+                  });
+                }}
+              >
+                {t("Update All")}
+              </Button>
+            </DialogActions>
+          </DialogBody>
+        </DialogSurface>
+      </Dialog>
     </>
   );
 };

@@ -1,7 +1,7 @@
 import useSWR, { mutate } from "swr";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLockFn } from "ahooks";
-import { Box, Button, Grid, IconButton, Stack, Divider } from "@mui/material";
+import { Box, Grid, IconButton, Stack, Divider } from "@mui/material";
 import {
   DndContext,
   closestCenter,
@@ -50,6 +50,15 @@ import { BaseStyledTextField } from "@/components/base/base-styled-text-field";
 import { listen } from "@tauri-apps/api/event";
 import { readTextFile } from "@tauri-apps/api/fs";
 import { readText } from "@tauri-apps/api/clipboard";
+import { Button, Input, Spinner } from "@fluentui/react-components";
+import {
+  ArrowClockwiseRegular,
+  ClipboardPasteRegular,
+  DismissRegular,
+  DocumentBulletListRegular,
+  FireFilled,
+} from "@fluentui/react-icons";
+import { tokens } from "./_theme";
 
 const ProfilePage = () => {
   const { t } = useTranslation();
@@ -259,32 +268,25 @@ const ProfilePage = () => {
       contentStyle={{ height: "100%" }}
       header={
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconButton
-            size="small"
-            color="inherit"
+          <Button
+            icon={<ArrowClockwiseRegular />}
             title={t("Update All Profiles")}
             onClick={onUpdateAll}
-          >
-            <RefreshRounded />
-          </IconButton>
+            appearance="subtle"
+          ></Button>
 
-          <IconButton
-            size="small"
-            color="inherit"
+          <Button
+            icon={<DocumentBulletListRegular />}
             title={t("View Runtime Config")}
             onClick={() => configRef.current?.open()}
-          >
-            <TextSnippetOutlined />
-          </IconButton>
-
-          <IconButton
-            size="small"
-            color="primary"
+            appearance="subtle"
+          />
+          <Button
+            icon={<FireFilled />}
             title={t("Reactivate Profiles")}
             onClick={onEnhance}
-          >
-            <LocalFireDepartmentRounded />
-          </IconButton>
+            appearance="subtle"
+          />
         </Box>
       }
     >
@@ -300,48 +302,29 @@ const ProfilePage = () => {
           alignItems: "center",
         }}
       >
-        <BaseStyledTextField
+        <Input
           value={url}
-          variant="outlined"
           onChange={(e) => setUrl(e.target.value)}
           placeholder={t("Profile URL")}
-          InputProps={{
-            sx: { pr: 1 },
-            endAdornment: !url ? (
-              <IconButton
-                size="small"
-                sx={{ p: 0.5 }}
-                title={t("Paste")}
-                onClick={onCopyLink}
-              >
-                <ContentPasteRounded fontSize="inherit" />
-              </IconButton>
-            ) : (
-              <IconButton
-                size="small"
-                sx={{ p: 0.5 }}
-                title={t("Clear")}
-                onClick={() => setUrl("")}
-              >
-                <ClearRounded fontSize="inherit" />
-              </IconButton>
-            ),
-          }}
+          contentAfter={
+            <Button
+              onClick={!url ? onCopyLink : () => setUrl("")}
+              icon={!url ? <ClipboardPasteRegular /> : <DismissRegular />}
+              size="small"
+              appearance="transparent"
+            />
+          }
+          style={{ flex: 1 }}
         />
-        <LoadingButton
+        <Button
           disabled={!url || disabled}
-          loading={loading}
-          variant="contained"
-          size="small"
-          sx={{ borderRadius: "6px" }}
           onClick={onImport}
+          icon={loading ? <Spinner size="tiny" /> : null}
         >
           {t("Import")}
-        </LoadingButton>
+        </Button>
         <Button
-          variant="contained"
-          size="small"
-          sx={{ borderRadius: "6px" }}
+          appearance="primary"
           onClick={() => viewerRef.current?.create()}
         >
           {t("New")}

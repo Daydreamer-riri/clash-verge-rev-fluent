@@ -13,6 +13,15 @@ import { useVerge } from "@/hooks/use-verge";
 import { BasePage } from "@/components/base";
 import { ProxyGroups } from "@/components/proxy/proxy-groups";
 import { ProviderButton } from "@/components/proxy/provider-button";
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItemRadio,
+  MenuList,
+  MenuPopover,
+  MenuTrigger,
+} from "@fluentui/react-components";
 
 const ProxyPage = () => {
   const { t } = useTranslation();
@@ -47,13 +56,38 @@ const ProxyPage = () => {
   return (
     <BasePage
       full
-      contentStyle={{ height: "100%" }}
+      contentStyle={{
+        height: "100%",
+        paddingInline: "16px",
+        boxSizing: "border-box",
+      }}
       title={t("Proxy Groups")}
       header={
         <Box display="flex" alignItems="center" gap={1}>
           <ProviderButton />
 
-          <ButtonGroup size="small">
+          <Menu>
+            <MenuTrigger disableButtonEnhancement>
+              <MenuButton appearance="secondary">
+                {t(curMode ?? "global")}
+              </MenuButton>
+            </MenuTrigger>
+            <MenuPopover>
+              <MenuList checkedValues={{ mode: [curMode ?? "global"] }}>
+                {modeList.map((mode) => (
+                  <MenuItemRadio
+                    key={mode}
+                    onClick={() => onChangeMode(mode)}
+                    value={mode}
+                    name="mode"
+                  >
+                    {t(mode)}
+                  </MenuItemRadio>
+                ))}
+              </MenuList>
+            </MenuPopover>
+          </Menu>
+          {/* <ButtonGroup size="small">
             {modeList.map((mode) => (
               <Button
                 key={mode}
@@ -64,7 +98,7 @@ const ProxyPage = () => {
                 {t(mode)}
               </Button>
             ))}
-          </ButtonGroup>
+          </ButtonGroup> */}
         </Box>
       }
     >

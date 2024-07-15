@@ -12,6 +12,12 @@ import {
   FluentProvider,
   Button,
   webLightTheme,
+  webDarkTheme,
+  Theme,
+  Subtitle2Stronger,
+  Caption1Stronger,
+  makeStyles,
+  Toaster,
 } from "@fluentui/react-components";
 import { listen } from "@tauri-apps/api/event";
 import { appWindow } from "@tauri-apps/api/window";
@@ -19,11 +25,12 @@ import { routers } from "./_routers";
 import { getAxios } from "@/services/api";
 import { useVerge } from "@/hooks/use-verge";
 import LogoSvg from "@/assets/image/logo.svg?react";
+import logo from "@/assets/image/app-icon.png";
 import iconLight from "@/assets/image/icon_light.svg?react";
 import iconDark from "@/assets/image/icon_dark.svg?react";
 import { useThemeMode } from "@/services/states";
 import { Notice } from "@/components/base";
-import { LayoutItem } from "@/components/layout/layout-item";
+import { FluentLayoutItem, LayoutItem } from "@/components/layout/layout-item";
 import { LayoutControl } from "@/components/layout/layout-control";
 import { LayoutTraffic } from "@/components/layout/layout-traffic";
 import { UpdateButton } from "@/components/layout/update-button";
@@ -35,11 +42,22 @@ import { getPortableFlag } from "@/services/cmds";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { invoke } from "@tauri-apps/api/tauri";
+import { darkTheme, lightTheme } from "./_theme";
 export let portableFlag = false;
 
 dayjs.extend(relativeTime);
 
 const OS = getSystem();
+
+const useStyle = makeStyles({
+  logoText: {
+    background: "linear-gradient(90deg, #4b50c9 0%, #4fdfd8 100%)",
+    backgroundClip: "text",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+  },
+});
 
 const Layout = () => {
   const mode = useThemeMode();
@@ -48,7 +66,7 @@ const Layout = () => {
   const { theme } = useCustomTheme();
 
   const { verge } = useVerge();
-  const { language, start_page } = verge || {};
+  const { language, start_page, theme_mode } = verge || {};
   const navigate = useNavigate();
   const location = useLocation();
   const routersEles = useRoutes(routers);
@@ -107,13 +125,13 @@ const Layout = () => {
     }
   }, [language, start_page]);
 
+  const classes = useStyle();
+
   return (
     <SWRConfig value={{ errorRetryCount: 3 }}>
       <ThemeProvider theme={theme}>
-        <FluentProvider
-          theme={webLightTheme}
-          style={{ background: "transparent" }}
-        >
+        <FluentProviderWithTheme>
+          <Toaster />
           <Paper
             square
             elevation={0}
@@ -148,9 +166,13 @@ const Layout = () => {
           >
             <div
               className="layout__left"
-              style={{ paddingLeft: 16, paddingRight: 16 }}
+              style={OS === "windows" ? { padding: "0 16px" } : {}}
             >
-              <div className="the-logo" data-tauri-drag-region="true">
+              <div
+                className="the-logo"
+                data-tauri-drag-region="true"
+                style={{ paddingRight: 0 }}
+              >
                 <div
                   style={{
                     height: "27px",
@@ -158,7 +180,20 @@ const Layout = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <SvgIcon
+                  <img
+                    src={logo}
+                    style={{
+                      marginTop: "-12px",
+                      marginRight: "5px",
+                      marginLeft: "-24px",
+                      height: "48px",
+                      width: "48px",
+                    }}
+                  ></img>
+                  <Subtitle2Stronger>
+                    Clash <span className={classes.logoText}>verge</span>
+                  </Subtitle2Stronger>
+                  {/* <SvgIcon
                     component={isDark ? iconDark : iconLight}
                     style={{
                       height: "36px",
@@ -168,29 +203,27 @@ const Layout = () => {
                       marginLeft: "-3px",
                     }}
                     inheritViewBox
-                  />
-                  <LogoSvg fill={isDark ? "white" : "black"} />
+                  /> */}
+                  {/* <LogoSvg fill={isDark ? "white" : "black"} /> */}
                 </div>
                 {<UpdateButton className="the-newbtn" />}
               </div>
 
-              <TabList
-                className="the-menu"
-                size="medium"
-                vertical
-                selectedValue={location.pathname}
-                onTabSelect={(e, value) => navigate(value.value as string)}
-              >
-                {routers.map((router) => (
-                  <LayoutItem
-                    key={router.label}
-                    to={router.path}
-                    icon={router.icon}
-                  >
-                    {t(router.label)}
-                  </LayoutItem>
-                ))}
-              </TabList>
+              {OS === "windows" ? (
+                renderFluentSideBar()
+              ) : (
+                <List className="the-menu">
+                  {routers.map((router) => (
+                    <LayoutItem
+                      key={router.label}
+                      to={router.path}
+                      icon={router.icon}
+                    >
+                      {t(router.label)}
+                    </LayoutItem>
+                  ))}
+                </List>
+              )}
 
               <div className="the-traffic">
                 <LayoutTraffic />
@@ -220,10 +253,50 @@ const Layout = () => {
               </TransitionGroup>
             </div>
           </Paper>
-        </FluentProvider>
+        </FluentProviderWithTheme>
       </ThemeProvider>
     </SWRConfig>
   );
+
+  function renderFluentSideBar() {
+    return (
+      <TabList
+        className="the-menu"
+        size="medium"
+        vertical
+        selectedValue={location.pathname}
+        onTabSelect={(e, value) => navigate(value.value as string)}
+        // appearance="subtle"
+      >
+        {routers.map((router) => (
+          <FluentLayoutItem
+            key={router.label}
+            to={router.path}
+            icon={router.icon}
+          >
+            {t(router.label)}
+          </FluentLayoutItem>
+        ))}
+      </TabList>
+    );
+  }
 };
 
 export default Layout;
+
+function FluentProviderWithTheme({ children }: { children: React.ReactNode }) {
+  webLightTheme.colorSubtleBackgroundHover = "rgba(0, 0, 0, 0.04)";
+  const theme = useThemeMode();
+  useEffect(() => {
+    invoke("set_mica_theme", { isDark: theme === "dark" });
+  }, [theme]);
+
+  return (
+    <FluentProvider
+      theme={theme === "light" ? lightTheme : darkTheme}
+      style={{ background: "transparent" }}
+    >
+      {children}
+    </FluentProvider>
+  );
+}

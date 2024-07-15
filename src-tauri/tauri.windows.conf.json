@@ -4,6 +4,13 @@
     "systemTray": {
       "iconPath": "icons/tray-icon.ico"
     },
+    "windows": [
+      {
+        "additionalBrowserArgs": "--enable-features=OverlayScrollbar,msOverlayScrollbarWinStyle,msOverlayScrollbarWinStyleAnimation",
+        "title": "clash verge",
+        "transparent": true
+      }
+    ],
     "bundle": {
       "identifier": "io.github.clash-verge-rev.clash-verge-rev",
       "targets": ["nsis", "updater"],

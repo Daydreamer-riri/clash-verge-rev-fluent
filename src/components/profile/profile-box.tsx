@@ -1,11 +1,12 @@
 import { alpha, Box, styled } from "@mui/material";
+import { tokens } from "../../pages/_theme";
 
 export const ProfileBox = styled(Box)(
   ({ theme, "aria-selected": selected }) => {
     const { mode, primary, text } = theme.palette;
     const key = `${mode}-${!!selected}`;
 
-    const backgroundColor = mode === "light" ? "#ffffff" : "#282A36";
+    const backgroundColor = tokens.surface1;
 
     const color = {
       "light-true": text.secondary,

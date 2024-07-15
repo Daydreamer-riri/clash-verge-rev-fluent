@@ -21,7 +21,12 @@ import { checkUpdate } from "@tauri-apps/api/updater";
 import { useVerge } from "@/hooks/use-verge";
 import { version } from "@root/package.json";
 import { DialogRef, Notice } from "@/components/base";
-import { SettingList, SettingItem } from "./mods/setting-comp";
+import {
+  SettingList,
+  SettingItem,
+  FluentSettingList,
+  FluentSettingItem,
+} from "./mods/setting-comp";
 import { ThemeModeSwitch } from "./mods/theme-mode-switch";
 import { ConfigViewer } from "./mods/config-viewer";
 import { HotkeyViewer } from "./mods/hotkey-viewer";
@@ -32,8 +37,22 @@ import { LayoutViewer } from "./mods/layout-viewer";
 import { UpdateViewer } from "./mods/update-viewer";
 import getSystem from "@/utils/get-system";
 import { routers } from "@/pages/_routers";
+import {
+  Caption2,
+  Dropdown,
+  Menu,
+  MenuButton,
+  MenuItemRadio,
+  MenuList,
+  MenuPopover,
+  MenuTrigger,
+  Option,
+  Button as FluentButton,
+} from "@fluentui/react-components";
+import { useSettingSystemStyle } from "./setting-system";
 import { TooltipIcon } from "@/components/base/base-tooltip-icon";
 import { ContentCopyRounded } from "@mui/icons-material";
+import { CopyRegular } from "@fluentui/react-icons";
 
 interface Props {
   onError?: (err: Error) => void;
@@ -76,6 +95,7 @@ const SettingVerge = ({ onError }: Props) => {
       Notice.error(err.message || err.toString());
     }
   };
+  const settingsClasses = useSettingSystemStyle();
 
   const onCopyClashEnv = useCallback(async () => {
     await copyClashEnv();
@@ -83,7 +103,7 @@ const SettingVerge = ({ onError }: Props) => {
   }, []);
 
   return (
-    <SettingList title={t("Verge Setting")}>
+    <FluentSettingList title={t("Verge Setting")}>
       <ThemeViewer ref={themeRef} />
       <ConfigViewer ref={configRef} />
       <HotkeyViewer ref={hotkeyRef} />
@@ -91,91 +111,203 @@ const SettingVerge = ({ onError }: Props) => {
       <LayoutViewer ref={layoutRef} />
       <UpdateViewer ref={updateRef} />
 
-      <SettingItem label={t("Language")}>
+      <FluentSettingItem label={t("Language")}>
         <GuardState
-          value={language ?? "en"}
+          value={{ language: language ?? "en" }}
           onCatch={onError}
-          onFormat={(e: any) => e.target.value}
+          onFormat={(_, data) => data.checkedItems[0]}
           onChange={(e) => onChangeData({ language: e })}
           onGuard={(e) => patchVerge({ language: e })}
+          onChangeProps="onCheckedValueChange"
+          valueProps="checkedValues"
         >
-          <Select size="small" sx={{ width: 110, "> div": { py: "7.5px" } }}>
-            <MenuItem value="zh">中文</MenuItem>
-            <MenuItem value="en">English</MenuItem>
-            <MenuItem value="ru">Русский</MenuItem>
-            <MenuItem value="fa">فارسی</MenuItem>
-          </Select>
+          <Menu>
+            <MenuTrigger>
+              <MenuButton>
+                {
+                  { zh: "中文", en: "English", ru: "Русский", fa: "فارسی" }[
+                    language ?? "en"
+                  ]
+                }
+              </MenuButton>
+            </MenuTrigger>
+            <MenuPopover>
+              <MenuList>
+                <MenuItemRadio name="language" value="zh">
+                  中文
+                </MenuItemRadio>
+                <MenuItemRadio name="language" value="en">
+                  English
+                </MenuItemRadio>
+                <MenuItemRadio name="language" value="ru">
+                  Русский
+                </MenuItemRadio>
+                <MenuItemRadio name="language" value="fa">
+                  فارسی
+                </MenuItemRadio>
+              </MenuList>
+            </MenuPopover>
+          </Menu>
         </GuardState>
-      </SettingItem>
+      </FluentSettingItem>
 
-      <SettingItem label={t("Theme Mode")}>
+      <FluentSettingItem label={t("Theme Mode")}>
         <GuardState
-          value={theme_mode}
+          value={{ theme_mode: theme_mode ?? "system" }}
+          onFormat={(_, data) => data.checkedItems[0]}
           onCatch={onError}
           onChange={(e) => onChangeData({ theme_mode: e })}
           onGuard={(e) => patchVerge({ theme_mode: e })}
+          onChangeProps="onCheckedValueChange"
+          valueProps="checkedValues"
         >
-          <ThemeModeSwitch />
+          <Menu>
+            <MenuTrigger>
+              <MenuButton>
+                {
+                  {
+                    system: t("theme.system"),
+                    light: t("theme.light"),
+                    dark: t("theme.dark"),
+                  }[theme_mode ?? "system"]
+                }
+              </MenuButton>
+            </MenuTrigger>
+            <MenuPopover>
+              <MenuList>
+                <MenuItemRadio name="theme_mode" value="system">
+                  {t(`theme.system`)}
+                </MenuItemRadio>
+                <MenuItemRadio name="theme_mode" value="light">
+                  {t(`theme.light`)}
+                </MenuItemRadio>
+                <MenuItemRadio name="theme_mode" value="dark">
+                  {t(`theme.dark`)}
+                </MenuItemRadio>
+              </MenuList>
+            </MenuPopover>
+          </Menu>
         </GuardState>
-      </SettingItem>
+      </FluentSettingItem>
 
       {OS !== "linux" && (
-        <SettingItem label={t("Tray Click Event")}>
+        <FluentSettingItem label={t("Tray Click Event")}>
           <GuardState
-            value={tray_event ?? "main_window"}
+            value={{ tray: tray_event ?? "main_window" }}
             onCatch={onError}
-            onFormat={(e: any) => e.target.value}
+            onFormat={(_, data) => data.checkedItems[0]}
             onChange={(e) => onChangeData({ tray_event: e })}
             onGuard={(e) => patchVerge({ tray_event: e })}
+            onChangeProps="onCheckedValueChange"
+            valueProps="checkedValues"
           >
-            <Select size="small" sx={{ width: 140, "> div": { py: "7.5px" } }}>
-              <MenuItem value="main_window">{t("Show Main Window")}</MenuItem>
-              <MenuItem value="system_proxy">{t("System Proxy")}</MenuItem>
-              <MenuItem value="tun_mode">{t("Tun Mode")}</MenuItem>
-              <MenuItem value="disable">{t("Disable")}</MenuItem>
-            </Select>
+            <Menu>
+              <MenuTrigger>
+                <MenuButton>
+                  {
+                    {
+                      main_window: t("Show Main Window"),
+                      system_proxy: t("System Proxy"),
+                      tun_mode: t("Tun Mode"),
+                      disable: t("Disable"),
+                    }[tray_event ?? "main_window"]
+                  }
+                </MenuButton>
+              </MenuTrigger>
+              <MenuPopover>
+                <MenuList>
+                  <MenuItemRadio name="tray" value="main_window">
+                    {t("Show Main Window")}
+                  </MenuItemRadio>
+                  <MenuItemRadio name="tray" value="system_proxy">
+                    {t("System Proxy")}
+                  </MenuItemRadio>
+                  <MenuItemRadio name="tray" value="tun_mode">
+                    {t("Tun Mode")}
+                  </MenuItemRadio>
+                  <MenuItemRadio name="tray" value="disable">
+                    {t("Disable")}
+                  </MenuItemRadio>
+                </MenuList>
+              </MenuPopover>
+            </Menu>
           </GuardState>
-        </SettingItem>
+        </FluentSettingItem>
       )}
 
-      <SettingItem
-        label={t("Copy Env Type")}
-        extra={
-          <TooltipIcon icon={ContentCopyRounded} onClick={onCopyClashEnv} />
-        }
-      >
+      <FluentSettingItem label={t("Copy Env Type")}>
+        <FluentButton
+          onClick={onCopyClashEnv}
+          icon={<CopyRegular />}
+          appearance="subtle"
+        />
         <GuardState
-          value={env_type ?? (OS === "windows" ? "powershell" : "bash")}
+          value={{
+            env_type: env_type ?? (OS === "windows" ? "powershell" : "bash"),
+          }}
           onCatch={onError}
-          onFormat={(e: any) => e.target.value}
+          onFormat={(_, data) => data.checkedItems[0]}
           onChange={(e) => onChangeData({ env_type: e })}
           onGuard={(e) => patchVerge({ env_type: e })}
+          onChangeProps="onCheckedValueChange"
+          valueProps="checkedValues"
         >
-          <Select size="small" sx={{ width: 140, "> div": { py: "7.5px" } }}>
-            <MenuItem value="bash">Bash</MenuItem>
-            <MenuItem value="cmd">CMD</MenuItem>
-            <MenuItem value="powershell">PowerShell</MenuItem>
-          </Select>
+          <Menu>
+            <MenuTrigger>
+              <MenuButton>{env_type}</MenuButton>
+            </MenuTrigger>
+            <MenuPopover>
+              <MenuList>
+                <MenuItemRadio name="env_type" value="bash">
+                  bash
+                </MenuItemRadio>
+                <MenuItemRadio name="env_type" value="cmd">
+                  cmd
+                </MenuItemRadio>
+                <MenuItemRadio name="env_type" value="powershell">
+                  powershell
+                </MenuItemRadio>
+              </MenuList>
+            </MenuPopover>
+          </Menu>
         </GuardState>
-      </SettingItem>
+      </FluentSettingItem>
 
-      <SettingItem label={t("Start Page")}>
+      <FluentSettingItem label={t("Start Page")}>
         <GuardState
-          value={start_page ?? "/"}
+          value={{ start_page: start_page ?? "/" }}
           onCatch={onError}
-          onFormat={(e: any) => e.target.value}
+          onFormat={(_, data) => data.checkedItems[0]}
           onChange={(e) => onChangeData({ start_page: e })}
           onGuard={(e) => patchVerge({ start_page: e })}
+          onChangeProps="onCheckedValueChange"
+          valueProps="checkedValues"
         >
-          <Select size="small" sx={{ width: 140, "> div": { py: "7.5px" } }}>
-            {routers.map((page: { label: string; path: string }) => {
-              return <MenuItem value={page.path}>{t(page.label)}</MenuItem>;
-            })}
-          </Select>
+          <Menu>
+            <MenuTrigger>
+              <MenuButton>
+                {t(
+                  routers.find((item) => item.path === (start_page ?? "/"))!
+                    .label
+                )}
+              </MenuButton>
+            </MenuTrigger>
+            <MenuPopover>
+              <MenuList>
+                {routers.map((page: { label: string; path: string }) => {
+                  return (
+                    <MenuItemRadio name="start_page" value={page.path}>
+                      {t(page.label)}
+                    </MenuItemRadio>
+                  );
+                })}
+              </MenuList>
+            </MenuPopover>
+          </Menu>
         </GuardState>
-      </SettingItem>
+      </FluentSettingItem>
 
-      <SettingItem label={t("Startup Script")}>
+      <FluentSettingItem label={t("Startup Script")}>
         <GuardState
           value={startup_script ?? ""}
           onCatch={onError}
@@ -223,54 +355,62 @@ const SettingVerge = ({ onError }: Props) => {
             }
           ></Input>
         </GuardState>
-      </SettingItem>
+      </FluentSettingItem>
 
-      <SettingItem
+      <FluentSettingItem
         onClick={() => themeRef.current?.open()}
         label={t("Theme Setting")}
       />
 
-      <SettingItem
+      <FluentSettingItem
         onClick={() => layoutRef.current?.open()}
         label={t("Layout Setting")}
       />
 
-      <SettingItem
+      <FluentSettingItem
         onClick={() => miscRef.current?.open()}
         label={t("Miscellaneous")}
       />
 
-      <SettingItem
+      <FluentSettingItem
         onClick={() => hotkeyRef.current?.open()}
         label={t("Hotkey Setting")}
       />
 
-      <SettingItem
+      <FluentSettingItem
         onClick={() => configRef.current?.open()}
         label={t("Runtime Config")}
       />
 
-      <SettingItem onClick={openAppDir} label={t("Open App Dir")} />
+      <FluentSettingItem onClick={openAppDir} label={t("Open App Dir")} />
 
-      <SettingItem onClick={openCoreDir} label={t("Open Core Dir")} />
+      <FluentSettingItem onClick={openCoreDir} label={t("Open Core Dir")} />
 
-      <SettingItem onClick={openLogsDir} label={t("Open Logs Dir")} />
+      <FluentSettingItem onClick={openLogsDir} label={t("Open Logs Dir")} />
 
-      <SettingItem onClick={onCheckUpdate} label={t("Check for Updates")} />
+      <FluentSettingItem
+        onClick={onCheckUpdate}
+        label={t("Check for Updates")}
+      />
 
-      <SettingItem onClick={openDevTools} label={t("Open Dev Tools")} />
+      <FluentSettingItem onClick={openDevTools} label={t("Open Dev Tools")} />
 
-      <SettingItem
+      <FluentSettingItem
         onClick={() => {
           exitApp();
         }}
         label={t("Exit")}
       />
 
-      <SettingItem label={t("Verge Version")}>
-        <Typography sx={{ py: "7px", pr: 1 }}>v{version}</Typography>
-      </SettingItem>
-    </SettingList>
+      <FluentSettingItem
+        label={
+          <div>
+            {t("Verge Version")}
+            <Caption2 className={settingsClasses.caption}>v{version}</Caption2>
+          </div>
+        }
+      ></FluentSettingItem>
+    </FluentSettingList>
   );
 };
 

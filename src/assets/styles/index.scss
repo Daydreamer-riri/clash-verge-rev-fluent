@@ -26,18 +26,18 @@ body {
   background-color: var(--primary-main);
 }
 
-*::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-  background: transparent;
-}
-*::-webkit-scrollbar-thumb {
-  border-radius: 6px;
-  background-color: var(--scroller-color);
-}
-*::-webkit-scrollbar-corner {
-  background-color: transparent;
-}
+// *::-webkit-scrollbar {
+//   width: 8px;
+//   height: 8px;
+//   background: transparent;
+// }
+// *::-webkit-scrollbar-thumb {
+//   border-radius: 6px;
+//   background-color: var(--scroller-color);
+// }
+// *::-webkit-scrollbar-corner {
+//   background-color: transparent;
+// }
 
 body {
   overflow: hidden;
@@ -59,4 +59,12 @@ body {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+}
+
+.svgr-icon {
+  // color: currentColor;
+
+  path {
+    fill: currentColor;
+  }
 }

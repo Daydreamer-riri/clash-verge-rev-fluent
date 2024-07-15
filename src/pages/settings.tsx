@@ -1,4 +1,5 @@
 import { Box, ButtonGroup, Grid, IconButton } from "@mui/material";
+import { Button } from "@fluentui/react-components";
 import { useLockFn } from "ahooks";
 import { useTranslation } from "react-i18next";
 import { BasePage, Notice } from "@/components/base";
@@ -8,6 +9,10 @@ import SettingVerge from "@/components/setting/setting-verge";
 import SettingClash from "@/components/setting/setting-clash";
 import SettingSystem from "@/components/setting/setting-system";
 import { useThemeMode } from "@/services/states";
+import {
+  BookQuestionMarkFilled,
+  BookQuestionMarkRegular,
+} from "@fluentui/react-icons";
 
 const SettingPage = () => {
   const { t } = useTranslation();
@@ -17,7 +22,9 @@ const SettingPage = () => {
   };
 
   const toGithubRepo = useLockFn(() => {
-    return openWebUrl("https://github.com/clash-verge-rev/clash-verge-rev");
+    return openWebUrl(
+      "https://github.com/Daydreamer-riri/clash-verge-rev-fluent"
+    );
   });
 
   const toGithubDoc = useLockFn(() => {
@@ -36,41 +43,34 @@ const SettingPage = () => {
       title={t("Settings")}
       header={
         <ButtonGroup variant="contained" aria-label="Basic button group">
-          <IconButton
-            size="medium"
-            color="inherit"
+          <Button
+            icon={<BookQuestionMarkFilled />}
             title={t("Manual")}
+            appearance="subtle"
             onClick={toGithubDoc}
-          >
-            <HelpOutlineRounded fontSize="inherit" />
-          </IconButton>
-          <IconButton
-            size="medium"
-            color="inherit"
+          />
+          <Button
+            icon={<Telegram fontSize="inherit" />}
             title={t("TG Channel")}
             onClick={toTelegramChannel}
-          >
-            <Telegram fontSize="inherit" />
-          </IconButton>
-
-          <IconButton
-            size="medium"
-            color="inherit"
+            appearance="subtle"
+          />
+          <Button
+            icon={<GitHub fontSize="inherit" />}
             title={t("Github Repo")}
             onClick={toGithubRepo}
-          >
-            <GitHub fontSize="inherit" />
-          </IconButton>
+            appearance="subtle"
+          />
         </ButtonGroup>
       }
     >
-      <Grid container spacing={{ xs: 1.5, lg: 1.5 }}>
+      <Grid container spacing={{ xs: 1.5, lg: 1.5 }} sx={{ pb: 1 }}>
         <Grid item xs={12} md={6}>
           <Box
             sx={{
               borderRadius: 2,
               marginBottom: 1.5,
-              backgroundColor: isDark ? "#282a36" : "#ffffff",
+              // backgroundColor: isDark ? "#282a36" : "#ffffff",
             }}
           >
             <SettingSystem onError={onError} />
@@ -78,7 +78,7 @@ const SettingPage = () => {
           <Box
             sx={{
               borderRadius: 2,
-              backgroundColor: isDark ? "#282a36" : "#ffffff",
+              // backgroundColor: isDark ? "#282a36" : "#ffffff",
             }}
           >
             <SettingClash onError={onError} />
@@ -88,7 +88,7 @@ const SettingPage = () => {
           <Box
             sx={{
               borderRadius: 2,
-              backgroundColor: isDark ? "#282a36" : "#ffffff",
+              // backgroundColor: isDark ? "#282a36" : "#ffffff",
             }}
           >
             <SettingVerge onError={onError} />

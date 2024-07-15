@@ -8,33 +8,42 @@ import {
 import { useMatch, useResolvedPath, useNavigate } from "react-router-dom";
 import { useVerge } from "@/hooks/use-verge";
 import { makeStyles, mergeClasses, Tab } from "@fluentui/react-components";
+import { tokens } from "../../pages/_theme";
 interface Props {
   to: string;
   children: string;
   icon: React.ReactNode[];
 }
-const useStyle = makeStyles({
+export const useListItemStyle = makeStyles({
   item: {
+    columnGap: "12px",
     marginBottom: "4px",
     borderRadius: "4px",
     outline: "none !important",
     "&:hover": {
-      backgroundColor: "rgba(0, 0, 0, 0.04)",
+      backgroundColor: tokens.overlay1,
       "&::before": {
         backgroundColor: "rgba(0, 0, 0, 0)",
       },
+      "& .fui-Tab__icon": {
+        color: tokens.colorNeutralForeground1Hover + " !important",
+      },
     },
     "&:active": {
-      backgroundColor: "rgba(0, 0, 0, 0.03)",
+      backgroundColor: tokens.overlay1Pressed,
       "&::before": {
         backgroundColor: "rgba(0, 0, 0, 0)",
       },
     },
   },
   selected: {
-    backgroundColor: "rgba(0, 0, 0, 0.04)",
+    backgroundColor: tokens.overlay1,
+  },
+  iconOverride: {
+    color: tokens.colorNeutralForeground1 + " !important",
   },
 });
+
 export const LayoutItem = (props: Props) => {
   const { to, children, icon } = props;
   const { verge } = useVerge();
@@ -42,18 +51,6 @@ export const LayoutItem = (props: Props) => {
   const resolved = useResolvedPath(to);
   const match = useMatch({ path: resolved.pathname, end: true });
   const navigate = useNavigate();
-
-  const classes = useStyle();
-
-  return (
-    <Tab
-      value={to}
-      className={mergeClasses(classes.item, !!match && classes.selected)}
-      icon={icon[0] as any}
-    >
-      {children.replace(/\s/g, "")}
-    </Tab>
-  );
 
   return (
     <ListItem sx={{ py: 0.5, maxWidth: 250, mx: "auto", padding: "4px 0px" }}>
@@ -104,3 +101,26 @@ export const LayoutItem = (props: Props) => {
     </ListItem>
   );
 };
+
+export function FluentLayoutItem(props: Props) {
+  const { to, children, icon } = props;
+  const { verge } = useVerge();
+  const resolved = useResolvedPath(to);
+  const match = useMatch({ path: resolved.pathname, end: true });
+
+  const classes = useListItemStyle();
+
+  return (
+    <Tab
+      value={to}
+      className={mergeClasses(classes.item, !!match && classes.selected)}
+      icon={{
+        children: icon[2] ?? (icon[0] as any),
+        className: classes.iconOverride,
+      }}
+      content={{ style: { fontWeight: "500" } }}
+    >
+      {children.replace(/\s/g, "")}
+    </Tab>
+  );
+}

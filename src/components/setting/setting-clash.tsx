@@ -1,28 +1,54 @@
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { TextField, Select, MenuItem, Typography } from "@mui/material";
+import { TextField, Select, Typography } from "@mui/material";
 
 import {
   SettingsRounded,
   ShuffleRounded,
   LanRounded,
 } from "@mui/icons-material";
-import { DialogRef, Notice, Switch } from "@/components/base";
+import {
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuPopover,
+  MenuTrigger,
+  Switch,
+  MenuItem,
+  MenuItemRadio,
+  makeStyles,
+  Tooltip,
+  Button,
+  Caption1,
+} from "@fluentui/react-components";
+import { DialogRef, Notice } from "@/components/base";
 import { useClash } from "@/hooks/use-clash";
 import { GuardState } from "./mods/guard-state";
 import { WebUIViewer } from "./mods/web-ui-viewer";
-import { ClashPortViewer } from "./mods/clash-port-viewer";
+import { ClashPort, ClashPortViewer } from "./mods/clash-port-viewer";
 import { ControllerViewer } from "./mods/controller-viewer";
-import { SettingList, SettingItem } from "./mods/setting-comp";
+import {
+  SettingItem,
+  FluentSettingList,
+  FluentSettingItem,
+} from "./mods/setting-comp";
 import { ClashCoreViewer } from "./mods/clash-core-viewer";
 import { invoke_uwp_tool } from "@/services/cmds";
 import getSystem from "@/utils/get-system";
 import { useVerge } from "@/hooks/use-verge";
 import { updateGeoData } from "@/services/api";
 import { TooltipIcon } from "@/components/base/base-tooltip-icon";
+import { ConnectedRegular, SettingsRegular } from "@fluentui/react-icons";
+import { useSettingSystemStyle } from "./setting-system";
 import { NetworkInterfaceViewer } from "./mods/network-interface-viewer";
 
 const isWIN = getSystem() === "windows";
+
+const useStyles = makeStyles({
+  expander: {
+    height: "72px",
+  },
+});
 
 interface Props {
   onError: (err: Error) => void;
@@ -60,27 +86,24 @@ const SettingClash = ({ onError }: Props) => {
     }
   };
 
+  const classes = useStyles();
+  const settingsClasses = useSettingSystemStyle();
+
   return (
-    <SettingList title={t("Clash Setting")}>
+    <FluentSettingList title={t("Clash Setting")}>
       <WebUIViewer ref={webRef} />
       <ClashPortViewer ref={portRef} />
       <ControllerViewer ref={ctrlRef} />
       <ClashCoreViewer ref={coreRef} />
       <NetworkInterfaceViewer ref={networkRef} />
 
-      <SettingItem
-        label={t("Allow Lan")}
-        extra={
-          <TooltipIcon
-            title={t("Network Interface")}
-            color={"inherit"}
-            icon={LanRounded}
-            onClick={() => {
-              networkRef.current?.open();
-            }}
-          />
-        }
-      >
+      <FluentSettingItem label={t("Allow Lan")}>
+        <Button
+          icon={<ConnectedRegular />}
+          appearance="subtle"
+          onClick={() => networkRef.current?.open()}
+          title={t("Network Interface")}
+        />
         <GuardState
           value={allowLan ?? false}
           valueProps="checked"
@@ -89,11 +112,11 @@ const SettingClash = ({ onError }: Props) => {
           onChange={(e) => onChangeData({ "allow-lan": e })}
           onGuard={(e) => patchClash({ "allow-lan": e })}
         >
-          <Switch edge="end" />
+          <Switch />
         </GuardState>
-      </SettingItem>
+      </FluentSettingItem>
 
-      <SettingItem label={t("IPv6")}>
+      <FluentSettingItem label={t("IPv6")}>
         <GuardState
           value={ipv6 ?? false}
           valueProps="checked"
@@ -102,31 +125,60 @@ const SettingClash = ({ onError }: Props) => {
           onChange={(e) => onChangeData({ ipv6: e })}
           onGuard={(e) => patchClash({ ipv6: e })}
         >
-          <Switch edge="end" />
+          <Switch />
         </GuardState>
-      </SettingItem>
+      </FluentSettingItem>
 
-      <SettingItem label={t("Log Level")}>
+      <FluentSettingItem label={t("Log Level")}>
         <GuardState
           // clash premium 2022.08.26 值为warn
-          value={logLevel === "warn" ? "warning" : logLevel ?? "info"}
+          value={{
+            level: [logLevel === "warn" ? "warning" : logLevel ?? "info"],
+          }}
           onCatch={onError}
-          onFormat={(e: any) => e.target.value}
+          onFormat={(_, data) => data.checkedItems[0]}
           onChange={(e) => onChangeData({ "log-level": e })}
           onGuard={(e) => patchClash({ "log-level": e })}
+          onChangeProps="onCheckedValueChange"
+          valueProps="checkedValues"
         >
-          <Select size="small" sx={{ width: 100, "> div": { py: "7.5px" } }}>
+          <Menu>
+            <MenuTrigger>
+              <MenuButton>{logLevel}</MenuButton>
+            </MenuTrigger>
+            <MenuPopover>
+              <MenuList>
+                <MenuItemRadio name="level" value="debug">
+                  Debug
+                </MenuItemRadio>
+                <MenuItemRadio name="level" value="info">
+                  Info
+                </MenuItemRadio>
+                <MenuItemRadio name="level" value="warning">
+                  Warn
+                </MenuItemRadio>
+                <MenuItemRadio name="level" value="error">
+                  Error
+                </MenuItemRadio>
+                <MenuItemRadio name="level" value="silent">
+                  Silent
+                </MenuItemRadio>
+              </MenuList>
+            </MenuPopover>
+          </Menu>
+          {/* <Select size="small" sx={{ width: 100, "> div": { py: "7.5px" } }}>
             <MenuItem value="debug">Debug</MenuItem>
             <MenuItem value="info">Info</MenuItem>
             <MenuItem value="warning">Warn</MenuItem>
             <MenuItem value="error">Error</MenuItem>
             <MenuItem value="silent">Silent</MenuItem>
-          </Select>
+          </Select> */}
         </GuardState>
-      </SettingItem>
+      </FluentSettingItem>
 
-      <SettingItem
+      <FluentSettingItem
         label={t("Port Config")}
+        canExpand
         extra={
           <TooltipIcon
             title={t("Random Port")}
@@ -142,8 +194,9 @@ const SettingClash = ({ onError }: Props) => {
             }}
           />
         }
+        content={<ClashPort />}
       >
-        <TextField
+        {/* <TextField
           autoComplete="new-password"
           disabled={enable_random_port}
           size="small"
@@ -153,38 +206,44 @@ const SettingClash = ({ onError }: Props) => {
             portRef.current?.open();
             (e.target as any).blur();
           }}
-        />
-      </SettingItem>
+        /> */}
+      </FluentSettingItem>
 
-      <SettingItem
+      <FluentSettingItem
         onClick={() => ctrlRef.current?.open()}
         label={t("External")}
       />
 
-      <SettingItem onClick={() => webRef.current?.open()} label={t("Web UI")} />
+      <FluentSettingItem
+        onClick={() => webRef.current?.open()}
+        label={t("Web UI")}
+      />
 
-      <SettingItem
-        label={t("Clash Core")}
-        extra={
-          <TooltipIcon
-            icon={SettingsRounded}
-            onClick={() => coreRef.current?.open()}
-          />
-        }
-      >
+      <FluentSettingItem label={t("Clash Core")}>
         <Typography sx={{ py: "7px", pr: 1 }}>{version}</Typography>
-      </SettingItem>
+        <Button
+          icon={<SettingsRegular />}
+          appearance="subtle"
+          onClick={() => coreRef.current?.open()}
+        />
+      </FluentSettingItem>
 
       {isWIN && (
-        <SettingItem
+        <FluentSettingItem
           onClick={invoke_uwp_tool}
-          label={t("Open UWP tool")}
-          extra={<TooltipIcon title={t("Open UWP tool Info")} />}
+          label={
+            <div>
+              {t("Open UWP tool")}
+              <Caption1 className={settingsClasses.caption}>
+                {t("Open UWP tool Info")}
+              </Caption1>
+            </div>
+          }
         />
       )}
 
-      <SettingItem onClick={onUpdateGeo} label={t("Update GeoData")} />
-    </SettingList>
+      <FluentSettingItem onClick={onUpdateGeo} label={t("Update GeoData")} />
+    </FluentSettingList>
   );
 };
 

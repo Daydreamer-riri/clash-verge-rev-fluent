@@ -136,6 +136,8 @@ export const ProxyGroups = (props: Props) => {
           onCheckAll={handleCheckAll}
           onHeadState={onHeadState}
           onChangeProxy={handleChangeProxy}
+          index={index}
+          renderList={renderList}
         />
       )}
     />
