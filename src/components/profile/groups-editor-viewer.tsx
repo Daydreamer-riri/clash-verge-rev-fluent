@@ -30,6 +30,10 @@ import {
   TextField,
   styled,
 } from "@mui/material";
+import {
+  VerticalAlignTopRounded,
+  VerticalAlignBottomRounded,
+} from "@mui/icons-material";
 import { GroupItem } from "@/components/profile/group-item";
 import {
   getNetworkInterfaces,
@@ -402,6 +406,11 @@ export const GroupsEditorViewer = (props: Props) => {
                         disableCloseOnSelect
                         onChange={(_, value) => value && field.onChange(value)}
                         renderInput={(params) => <TextField {...params} />}
+                        renderOption={(props, option) => (
+                          <li {...props} title={t(option)}>
+                            {option}
+                          </li>
+                        )}
                       />
                     </Item>
                   )}
@@ -705,6 +714,7 @@ export const GroupsEditorViewer = (props: Props) => {
                 <Button
                   fullWidth
                   variant="contained"
+                  startIcon={<VerticalAlignTopRounded />}
                   onClick={() => {
                     try {
                       validateGroup();
@@ -726,6 +736,7 @@ export const GroupsEditorViewer = (props: Props) => {
                 <Button
                   fullWidth
                   variant="contained"
+                  startIcon={<VerticalAlignBottomRounded />}
                   onClick={() => {
                     try {
                       validateGroup();
