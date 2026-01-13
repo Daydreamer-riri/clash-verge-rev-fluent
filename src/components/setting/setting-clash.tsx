@@ -79,7 +79,7 @@ const SettingClash = ({ onError }: Props) => {
   const coreRef = useRef<DialogRef>(null);
   const networkRef = useRef<DialogRef>(null);
 
-  const onSwitchFormat = (_e: any, value: boolean) => value;
+  const onSwitchFormat = (_e: any, data: { checked: boolean }) => data.checked;
   const onChangeData = (patch: Partial<IConfigData>) => {
     mutateClash((old) => ({ ...(old! || {}), ...patch }), false);
   };
